@@ -17,7 +17,7 @@ class Pathfinder
 
 
     /**
-     * Get block at a given coordinates
+     * Get the block at given coordinates
      * @param  {int}   x X coordinate
      * @param  {int}   y Y coordinate
      * @return {Block}   Block object
@@ -26,15 +26,7 @@ class Pathfinder
     getBlockAtCoordinate(x = 1, y = 1)
     {
 
-        let grid   = this.grid;
-        let blocks = grid.blocks;
-
-        if (typeof(blocks[x]) !== 'undefined' && typeof(blocks[x][y]) !== 'undefined')
-        {
-            return blocks[x][y];
-        }
-
-        throw 'Block at grid coordinate ' + x + ',' + y + ' does not exist';
+        return this.grid.getBlockAtCoordinate(x, y);
 
     }
 
