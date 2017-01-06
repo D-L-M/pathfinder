@@ -34,14 +34,13 @@ class Block
 
     /**
      * Get blocks adjacent to a given block
-     * @param  {bool}       includeBlocked Whether to include blocks that have been marked as 'blocked'
-     * @param  {Block|null} targetBlock    Optional path target block
-     * @return {array}                     Array of Block objects
+     * @param  {bool}  includeBlocked Whether to include blocks that have been marked as 'blocked'
+     * @return {array}                Array of Block objects
      */
-    getAdjacentBlocks(includeBlocked = true, targetBlock = null)
+    getAdjacentBlocks(includeBlocked = true)
     {
 
-        return this.grid.getAdjacentBlocks(this, includeBlocked, targetBlock);
+        return this.grid.getAdjacentBlocks(this, includeBlocked);
 
     }
 

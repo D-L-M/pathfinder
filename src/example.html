@@ -5,7 +5,7 @@
     <head>
 
         <title>Pathfinder Example</title>
-        <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
         <script src="pathfinder.min.js"></script>
 
         <style>
@@ -42,14 +42,12 @@
 
             .block.path
             {
-                display: none;
                 background-color: #ccc;
             }
             
             #rover
             {
                 z-index: 10;
-                transition: all 0.05s linear;
                 background-color: #f00;
                 border-radius: 100%;
                 transform: scale(0.75);
@@ -66,8 +64,8 @@
         <script>
 
             var width     = Math.ceil(Math.random() * 175);
-            var height    = Math.ceil(Math.random() * 50);
-            var obstacles = Math.ceil(Math.random() * ((width * height) / 4));
+            var height    = Math.ceil(Math.random() * 100);
+            var obstacles = Math.ceil(Math.random() * ((width * height) / 1.5));
             var blocked   = [];
 
             for (var i = 0; i < obstacles; i++)
@@ -80,18 +78,23 @@
 
             }
 
-            var pathfinder = new Pathfinder(width, height, blocked);
-            var startX     = Math.ceil(Math.random() * width);
-            var startY     = Math.ceil(Math.random() * height);
-            var endX       = Math.ceil(Math.random() * width);
-            var endY       = Math.ceil(Math.random() * height);
-            var start      = pathfinder.getBlockAtCoordinate(startX, startY);
-            var end        = pathfinder.getBlockAtCoordinate(endX, endY);
+            var pathfinder      = new Pathfinder(width, height, blocked);
+            var startX          = Math.ceil(Math.random() * width);
+            var startY          = Math.ceil(Math.random() * height);
+            var endX            = Math.ceil(Math.random() * width);
+            var endY            = Math.ceil(Math.random() * height);
+            var start           = pathfinder.getBlockAtCoordinate(startX, startY);
+            var end             = pathfinder.getBlockAtCoordinate(endX, endY);
+            var inspectedBlocks = [];
+            var callback        = function(block)
+            {
+                inspectedBlocks.push(block);
+            };
 
             try
             {
 
-                var path = pathfinder.getNavigationPath(start, end);
+                var path = pathfinder.getNavigationPath(start, end, callback);
 
                 for (var x in pathfinder.grid.blocks)
                 {
@@ -99,8 +102,7 @@
                     for (var y in pathfinder.grid.blocks[x])
                     {
 
-                        var block = '<div class="block';
-
+                        var block  = '<div id="block_' + x + '_' + y + '" class="block';
                         var isPath = false;
 
                         for (var i in path.path)
@@ -128,14 +130,40 @@
                 var roverInterval = setInterval(function()
                 {
 
-                    $('#grid').append('<div class="block path" style="top: ' + (path.path[pathPosition].y * 10) + 'px; left: ' + (path.path[pathPosition].x * 10) + 'px;"></div>');
-                    $('.block.path').fadeIn(100);
-                    $('#rover').css({top: (path.path[pathPosition].y * 10), left: (path.path[pathPosition].x * 10)});
+                    if (typeof path.path[(pathPosition - 1)] !== 'undefined' &&
+                        inspectedBlocks.indexOf(path.path[(pathPosition - 1)]) > -1)
+                    {
+
+                        for (var i in inspectedBlocks)
+                        {
+
+                            var inspectedBlock = inspectedBlocks[i];
+
+                            if (inspectedBlock.getCoordinates() == path.path[(pathPosition - 1)].getCoordinates())
+                            {
+                                break;
+                            }
+
+                            $('#block_' + inspectedBlock.x + '_' + inspectedBlock.y).css({backgroundColor: '#e5e5e5'});
+
+                        }
+
+                    }
+
+                    if (typeof path.path[(pathPosition + 1)] !== 'undefined')
+                    {
+                        $('#grid').append('<div class="block path" style="top: ' + (path.path[(pathPosition + 1)].y * 10) + 'px; left: ' + (path.path[(pathPosition + 1)].x * 10) + 'px;"></div>');
+                        $('#rover').css({top: (path.path[(pathPosition + 1)].y * 10), left: (path.path[(pathPosition + 1)].x * 10)});
+                    }
 
                     pathPosition--;
 
                     if (pathPosition < 0)
                     {
+                        setTimeout(function()
+                        {
+                            $('#rover').css({top: (path.path[0].y * 10), left: (path.path[0].x * 10)});
+                        }, 100);
                         clearInterval(roverInterval);
                         setTimeout(function()
                         {
@@ -143,7 +171,7 @@
                         }, 500);
                     }
 
-                }, 50);
+                }, 100);
 
             }
 

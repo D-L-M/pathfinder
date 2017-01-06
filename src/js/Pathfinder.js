@@ -33,14 +33,15 @@ class Pathfinder
 
     /**
      * Get a nagivation path
-     * @param  {Block}          from Start block object
-     * @param  {Block}          to   Finish block object
-     * @return {NavigationPath}      NavigationPath object
+     * @param  {Block}          from     Start block object
+     * @param  {Block}          to       Finish block object
+     * @param  {closure}        callback Closure that blocks are passed to as they are inspected
+     * @return {NavigationPath}          NavigationPath object
      */
-    getNavigationPath(from, to)
+    getNavigationPath(from, to, callback)
     {
 
-        return new NavigationPath(this.grid, from, to);
+        return new NavigationPath(this.grid, from, to, callback);
 
     }
 

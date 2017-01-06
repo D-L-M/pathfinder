@@ -57,61 +57,44 @@ class Grid
 
 
     /**
-     * Get blocks adjacent to a given block
-     * @param  {Block}      block          Block object to get adjacent blocks to
-     * @param  {bool}       includeBlocked Whether to include blocks that have been marked as 'blocked'
-     * @param  {Block|null} targetBlock    Optional path target block
-     * @return {array}                     Array of Block objects
+     * Calculate the distance between two blocks
+     * @param  {Block} firstBlock  First block to check distance between
+     * @param  {Block} secondBlock Second block to check distance between
+     * @return {float}             Distance between blocks
      */
-    getAdjacentBlocks(block, includeBlocked = true, targetBlock = null)
+    calculateDistanceBetweenBlocks(firstBlock, secondBlock)
+    {
+
+        let xDiff    = Math.abs(firstBlock.x - secondBlock.x);
+        let yDiff    = Math.abs(firstBlock.y - secondBlock.y);
+        let distance = Math.sqrt((xDiff * xDiff) + (yDiff * yDiff));
+
+        return distance;
+
+    }
+
+
+    /**
+     * Get blocks adjacent to a given block
+     * @param  {Block} block          Block object to get adjacent blocks to
+     * @param  {bool}  includeBlocked Whether to include blocks that have been marked as 'blocked'
+     * @return {array}                Array of Block objects
+     */
+    getAdjacentBlocks(block, includeBlocked = true)
     {
 
         let nearby   = [];
-        let xFrom    = -1;
-        let yFrom    = -1;
-        let xTo      = 1;
-        let yTo      = 1;
-        let xToLimit = 2;
-        let yToLimit = 2;
-
-        /*
-         * If a target block has been passed, set the direction in which we
-         * will traverse the neighbouring blocks so that those nearest the
-         * target block are at the top of the array that is returned
-         */
-        if (targetBlock !== null)
-        {
-
-            if (targetBlock.x > block.x)
-            {
-                xFrom    = 1;
-                xTo      = -1;
-                xToLimit = -2;
-            }
-
-            if (targetBlock.y > block.y)
-            {
-                yFrom    = 1;
-                yTo      = -1;
-                yToLimit = -2;
-            }
-
-        }
-
-        let x = xFrom;
-
+        
         /*
          * Traverse the rows
          */
-        while (x != xToLimit)
+        for (let x = -1; x <= 1; x++)
         {
-
-            let y = yFrom;
 
             /*
             * Traverse the columns
             */
-            while (y != yToLimit)
+            for (let y = -1; y <= 1; y++)
             {
 
                 let targetX       = (block.x + x);
@@ -134,33 +117,7 @@ class Grid
                     }
 
                 }
-
-                /*
-                 * Increase or decrease the active column count
-                 */
-                if (yTo > yFrom)
-                {
-                    y++;
-                }
-
-                else
-                {
-                    y--;
-                }
                 
-            }
-
-            /*
-             * Increase or decrease the active row count
-             */
-            if (xTo > xFrom)
-            {
-                x++;
-            }
-
-            else
-            {
-                x--;
             }
 
         }
