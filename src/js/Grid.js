@@ -81,9 +81,10 @@ export default class Grid
      * Get blocks adjacent to a given block
      * @param  {Block} block          Block object to get adjacent blocks to
      * @param  {bool}  includeBlocked Whether to include blocks that have been marked as 'blocked'
+     * @param  {bool}  allowDiagonals Whether to allow blocks that are diagonally adjacent
      * @return {array}                Array of Block objects
      */
-    getAdjacentBlocks(block, includeBlocked = true)
+    getAdjacentBlocks(block, includeBlocked = true, allowDiagonals = true)
     {
 
         let nearby   = [];
@@ -104,12 +105,13 @@ export default class Grid
                 let targetY       = (block.y + y);
                 let isCentreBlock = (x == 0 & y == 0);
                 let isOnGrid      = (targetX > 0 && targetX <= this.width && targetY > 0 && targetY <= this.height);
+                let isDiagonal    = ((x == -1 && y == -1) || (x == -1 && y == 1) || (x == 1 && y == 1) || (x == 1 && y == -1));
 
                 /*
                  * Only include blocks that are actual neighbours and haven't
                  * been marked as 'blocked'
                  */
-                if (!isCentreBlock && isOnGrid)
+                if (!isCentreBlock && isOnGrid && (!isDiagonal || allowDiagonals))
                 {
 
                     let targetBlock = this.blocks[targetX][targetY];

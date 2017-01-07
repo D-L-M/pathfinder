@@ -39,13 +39,13 @@ export default class Pathfinder
      * Get a nagivation path
      * @param  {Block}          from     Start block object
      * @param  {Block}          to       Finish block object
-     * @param  {closure}        callback Closure that blocks are passed to as they are inspected
+     * @param  {object}         options  Optional options object
      * @return {NavigationPath}          NavigationPath object
      */
-    getNavigationPath(from, to, callback)
+    getNavigationPath(from, to, options = {})
     {
 
-        return new NavigationPath(this.grid, from, to, callback);
+        return new NavigationPath(this.grid, from, to, options);
 
     }
 

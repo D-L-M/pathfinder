@@ -38,12 +38,13 @@ export default class Block
     /**
      * Get blocks adjacent to a given block
      * @param  {bool}  includeBlocked Whether to include blocks that have been marked as 'blocked'
+     * @param  {bool}  allowDiagonals Whether to allow blocks that are diagonally adjacent
      * @return {array}                Array of Block objects
      */
-    getAdjacentBlocks(includeBlocked = true)
+    getAdjacentBlocks(includeBlocked = true, allowDiagonals = true)
     {
 
-        return this.grid.getAdjacentBlocks(this, includeBlocked);
+        return this.grid.getAdjacentBlocks(this, includeBlocked, allowDiagonals);
 
     }
 

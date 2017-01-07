@@ -112,7 +112,7 @@
                 $('#grid').append('<div class="block end" style="top: ' + (end.y * 10) + 'px; left: ' + (end.x * 10) + 'px;"></div>');
                 $('#grid').append('<div class="block" id="rover" style="top: ' + (start.y * 10) + 'px; left: ' + (start.x * 10) + 'px;"></div>');
 
-                var path                = pathfinder.getNavigationPath(start, end);
+                var path                = pathfinder.getNavigationPath(start, end, {allowDiagonals: true});
                 var pathfindingPosition = 0;
                 var pathfindingInterval = setInterval(function()
                 {

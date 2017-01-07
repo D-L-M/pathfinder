@@ -8,16 +8,23 @@ export default class NavigationPath
 
     /**
      * Instantiate a NavigationPath object and plot the requested path
-     * @param {Block} from Start block object
-     * @param {Block} to   Finish block object
-     * @param {Grid}  grid Grid object
+     * @param {Block}  from    Start block object
+     * @param {Block}  to      Finish block object
+     * @param {Grid}   grid    Grid object
+     * @param {object} options Optional options object
      */
-    constructor(grid, from, to)
+    constructor(grid, from, to, options = {})
     {
 
         this.grid     = grid;
         this.from     = from;
         this.to       = to;
+        this.options  = options;
+
+        if (typeof this.options.allowDiagonals === 'undefined')
+        {
+            this.options.allowDiagonals = true;
+        }
 
         this._calculatePath();
 
@@ -105,7 +112,8 @@ export default class NavigationPath
                      * Get adjacent blocks to the head and loop through them
                      */
                     foundFreeBlock         = true;
-                    let adjacentBlocks     = this._reorderAdjacentBlocks(block.getAdjacentBlocks(false, to));
+                    let allowDiagonals     = this.options.allowDiagonals;
+                    let adjacentBlocks     = this._reorderAdjacentBlocks(block.getAdjacentBlocks(false, allowDiagonals));
                     let headCoordinates    = block.getCoordinates();
                     let adjacentBlockCount = 1;
                     let closestBlocks      = [];
