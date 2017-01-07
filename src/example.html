@@ -37,18 +37,23 @@
 
             .block.start, .block.end
             {
-                background-color: #0f0;
+                background-color: #f00;
             }
 
-            .block.path
+            .block.explored
             {
-                background-color: #ccc;
+                background-color: #d9d9d9;
+            }
+
+            .block.explored.path
+            {
+                background-color: #aaa;
             }
             
             #rover
             {
                 z-index: 10;
-                background-color: #f00;
+                background-color: #000;
                 border-radius: 100%;
                 transform: scale(0.75);
             }
@@ -126,52 +131,46 @@
                 $('#grid').append('<div class="block end" style="top: ' + (end.y * 10) + 'px; left: ' + (end.x * 10) + 'px;"></div>');
                 $('#grid').append('<div class="block" id="rover" style="top: ' + (start.y * 10) + 'px; left: ' + (start.x * 10) + 'px;"></div>');
 
-                var pathPosition  = (path.path.length - 1);
-                var roverInterval = setInterval(function()
+                var pathfindingPosition = 0;
+                var pathfindingInterval = setInterval(function()
                 {
 
-                    if (typeof path.path[(pathPosition - 1)] !== 'undefined' &&
-                        inspectedBlocks.indexOf(path.path[(pathPosition - 1)]) > -1)
+                    var inspectedBlock = inspectedBlocks[pathfindingPosition++];
+                    $('#block_' + inspectedBlock.x + '_' + inspectedBlock.y).addClass('explored');
+
+                    if (pathfindingPosition >= inspectedBlocks.length)
                     {
 
-                        for (var i in inspectedBlocks)
+                        clearInterval(pathfindingInterval);
+
+                        var pathPosition  = (path.path.length - 1);
+                        var roverInterval = setInterval(function()
                         {
 
-                            var inspectedBlock = inspectedBlocks[i];
+                            var pathBlock = path.path[pathPosition];
 
-                            if (inspectedBlock.getCoordinates() == path.path[(pathPosition - 1)].getCoordinates())
+                            $('#block_' + pathBlock.x + '_' + pathBlock.y).addClass('path');
+                            $('#rover').css({top: (pathBlock.y * 10), left: (pathBlock.x * 10)});
+
+                            pathPosition--;
+
+                            if (pathPosition < 0)
                             {
-                                break;
+
+                                clearInterval(roverInterval);
+
+                                setTimeout(function()
+                                {
+                                    location.reload();
+                                }, 500);
+
                             }
 
-                            $('#block_' + inspectedBlock.x + '_' + inspectedBlock.y).css({backgroundColor: '#e5e5e5'});
-
-                        }
+                        }, 50);
 
                     }
 
-                    if (typeof path.path[(pathPosition + 1)] !== 'undefined')
-                    {
-                        $('#grid').append('<div class="block path" style="top: ' + (path.path[(pathPosition + 1)].y * 10) + 'px; left: ' + (path.path[(pathPosition + 1)].x * 10) + 'px;"></div>');
-                        $('#rover').css({top: (path.path[(pathPosition + 1)].y * 10), left: (path.path[(pathPosition + 1)].x * 10)});
-                    }
-
-                    pathPosition--;
-
-                    if (pathPosition < 0)
-                    {
-                        setTimeout(function()
-                        {
-                            $('#rover').css({top: (path.path[0].y * 10), left: (path.path[0].x * 10)});
-                        }, 100);
-                        clearInterval(roverInterval);
-                        setTimeout(function()
-                        {
-                            location.reload();
-                        }, 500);
-                    }
-
-                }, 100);
+                }, 50);
 
             }
 
