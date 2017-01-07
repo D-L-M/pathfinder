@@ -1,4 +1,8 @@
-class NavigationPath
+import Grid from './Grid';
+import Block from './Block';
+
+
+export default class NavigationPath
 {
 
 

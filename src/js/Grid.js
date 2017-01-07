@@ -1,4 +1,7 @@
-class Grid
+import Block from './Block';
+
+
+export default class Grid
 {
 
 

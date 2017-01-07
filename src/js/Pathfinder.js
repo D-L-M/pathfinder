@@ -1,4 +1,8 @@
-class Pathfinder
+import Grid from './Grid';
+import NavigationPath from './NavigationPath';
+
+
+export default class Pathfinder
 {
 
 

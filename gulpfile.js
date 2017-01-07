@@ -1,7 +1,10 @@
-var gulp   = require('gulp');
-var babel  = require('gulp-babel');
-var uglify = require('gulp-uglify');
-var concat = require('gulp-concat');
+var gulp       = require('gulp');
+var browserify = require('browserify');
+var babelify   = require('babelify');
+var source     = require('vinyl-source-stream');
+var buffer     = require('vinyl-buffer');
+var uglify     = require('gulp-uglify');
+var rename     = require('gulp-rename');
 
 
 gulp.task('copyHtml', function()
@@ -12,7 +15,12 @@ gulp.task('copyHtml', function()
 
 gulp.task('compileJavaScript', function()
 {
-    gulp.src('src/**/*.js').pipe(babel({presets: ['es2015']})).pipe(concat('pathfinder.min.js')).pipe(uglify()).pipe(gulp.dest('./dist/'));
+
+    var bundler = browserify({entries: './src/js/index.js', standalone: 'Pathfinder'});
+
+    bundler.transform('babelify', {presets: ['es2015']});
+    bundler.bundle().pipe(source('index.js')).pipe(buffer()).pipe(uglify()).pipe(rename('pathfinder.min.js')).pipe(gulp.dest('./dist/'));
+
 });
 
 
