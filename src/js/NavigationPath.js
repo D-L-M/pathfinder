@@ -8,19 +8,16 @@ export default class NavigationPath
 
     /**
      * Instantiate a NavigationPath object and plot the requested path
-     * @param {Block}        from     Start block object
-     * @param {Block}        to       Finish block object
-     * @param {Grid}         grid     Grid object
-     * @param {closure|null} callback Optional closure that blocks are passed to as they are inspected
+     * @param {Block} from Start block object
+     * @param {Block} to   Finish block object
+     * @param {Grid}  grid Grid object
      */
-    constructor(grid, from, to, callback = null)
+    constructor(grid, from, to)
     {
 
         this.grid     = grid;
         this.from     = from;
         this.to       = to;
-        this.path     = [];
-        this.callback = (callback !== null ? callback : function() {});
 
         this._calculatePath();
 
@@ -58,16 +55,20 @@ export default class NavigationPath
     _calculatePath()
     {
 
-        this._resetPathHeadCache();
+        this.path     = [];
+        this.explored = [];
 
-        let from = this.from;
-        let to   = this.to;
+        let from            = this.from;
+        let to              = this.to;
+        let pathHeads       = [];
+        let visitedBlocks   = {};
+        let pathHeadHistory = {};
         
         /*
          * Set up an initial path head (a head is the latest block used in a
          * given path) to be the starting block
          */
-        this._pathHeads.push(from);
+        pathHeads.push(from);
 
         /*
          * this.path will eventually be populated with blocks that form a
@@ -82,10 +83,10 @@ export default class NavigationPath
              * Iterate through all path heads and work on those that haven't
              * yet been nullified (will be the latest generation of heads)
              */
-            for (let i in this._pathHeads)
+            for (let i in pathHeads)
             {
 
-                let block = this._pathHeads[i];
+                let block = pathHeads[i];
 
                 if (block !== null)
                 {
@@ -95,7 +96,7 @@ export default class NavigationPath
                      * neighbours pushed it onto the stack in the last
                      * iteration) then skip to the next path head
                      */
-                    if (typeof(this._visitedBlocks[block.getCoordinates()]) !== 'undefined')
+                    if (typeof(visitedBlocks[block.getCoordinates()]) !== 'undefined')
                     {
                         continue;
                     }
@@ -122,7 +123,7 @@ export default class NavigationPath
                          * adjacent block (this way, blocks that comprise a
                          * successful path can be retraced)
                          */
-                        if (typeof(this._visitedBlocks[adjacentBlockCoordinates]) === 'undefined')
+                        if (typeof(visitedBlocks[adjacentBlockCoordinates]) === 'undefined')
                         {
 
                             /*
@@ -141,16 +142,15 @@ export default class NavigationPath
                              */
                             else
                             {
-                                this._pathHeads.push(adjacentBlock);
+                                pathHeads.push(adjacentBlock);
                             }
 
-                            this._pathHeadHistory[adjacentBlockCoordinates] = block;
+                            pathHeadHistory[adjacentBlockCoordinates] = block;
 
                             /*
-                             * Alert the callback to the fact that this block
-                             * was inspected
+                             * Make a note that the block was explored
                              */
-                            this.callback(adjacentBlock);
+                            this.explored.push(adjacentBlock);
 
                         }
 
@@ -169,7 +169,7 @@ export default class NavigationPath
 
                                 this.path.push(previousPathHead);
 
-                                previousPathHead = this._pathHeadHistory[previousPathHead.getCoordinates()];
+                                previousPathHead = pathHeadHistory[previousPathHead.getCoordinates()];
 
                             }
 
@@ -187,7 +187,7 @@ export default class NavigationPath
                      */
                     for (let k in closestBlocks)
                     {
-                        this._pathHeads.unshift(closestBlocks[k]);
+                        pathHeads.unshift(closestBlocks[k]);
                     }
 
                     /*
@@ -195,7 +195,7 @@ export default class NavigationPath
                      * is no longer a path head and other heads know that they
                      * were too slow and should not consider this block
                      */
-                    this._visitedBlocks[headCoordinates] = true;
+                    visitedBlocks[headCoordinates] = true;
 
                     /*
                      * Break out of the loop, so that the most direct path will
@@ -217,19 +217,6 @@ export default class NavigationPath
             }
 
         }
-
-    }
-
-
-    /**
-     * Empty the objects that store path heads and their histories
-     */
-    _resetPathHeadCache()
-    {
-
-        this._pathHeads       = [];
-        this._visitedBlocks   = {};
-        this._pathHeadHistory = {};
 
     }
 

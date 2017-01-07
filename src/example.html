@@ -83,23 +83,16 @@
 
             }
 
-            var pathfinder      = new Pathfinder(width, height, blocked);
-            var startX          = Math.ceil(Math.random() * width);
-            var startY          = Math.ceil(Math.random() * height);
-            var endX            = Math.ceil(Math.random() * width);
-            var endY            = Math.ceil(Math.random() * height);
-            var start           = pathfinder.getBlockAtCoordinate(startX, startY);
-            var end             = pathfinder.getBlockAtCoordinate(endX, endY);
-            var inspectedBlocks = [];
-            var callback        = function(block)
-            {
-                inspectedBlocks.push(block);
-            };
+            var pathfinder = new Pathfinder(width, height, blocked);
+            var startX     = Math.ceil(Math.random() * width);
+            var startY     = Math.ceil(Math.random() * height);
+            var endX       = Math.ceil(Math.random() * width);
+            var endY       = Math.ceil(Math.random() * height);
+            var start      = pathfinder.getBlockAtCoordinate(startX, startY);
+            var end        = pathfinder.getBlockAtCoordinate(endX, endY);
 
             try
             {
-
-                var path = pathfinder.getNavigationPath(start, end, callback);
 
                 for (var x in pathfinder.grid.blocks)
                 {
@@ -107,19 +100,7 @@
                     for (var y in pathfinder.grid.blocks[x])
                     {
 
-                        var block  = '<div id="block_' + x + '_' + y + '" class="block';
-                        var isPath = false;
-
-                        for (var i in path.path)
-                        {
-                            if (path.path[i].x == x && path.path[i].y == y)
-                            {
-                                isPath = true;
-                                break;
-                            }
-                        }
-
-                        block += (pathfinder.grid.blocks[x][y].isBlocked ? ' blocked' : '') + '" style="top: ' + (y * 10) + 'px; left: ' + (x * 10) + 'px;"></div>';
+                        var block = '<div id="block_' + x + '_' + y + '" class="block' + (pathfinder.grid.blocks[x][y].isBlocked ? ' blocked' : '') + '" style="top: ' + (y * 10) + 'px; left: ' + (x * 10) + 'px;"></div>';
 
                         $('#grid').append(block);
 
@@ -131,14 +112,16 @@
                 $('#grid').append('<div class="block end" style="top: ' + (end.y * 10) + 'px; left: ' + (end.x * 10) + 'px;"></div>');
                 $('#grid').append('<div class="block" id="rover" style="top: ' + (start.y * 10) + 'px; left: ' + (start.x * 10) + 'px;"></div>');
 
+                var path                = pathfinder.getNavigationPath(start, end);
                 var pathfindingPosition = 0;
                 var pathfindingInterval = setInterval(function()
                 {
 
-                    var inspectedBlock = inspectedBlocks[pathfindingPosition++];
-                    $('#block_' + inspectedBlock.x + '_' + inspectedBlock.y).addClass('explored');
+                    var exploredBlock = path.explored[pathfindingPosition++];
 
-                    if (pathfindingPosition >= inspectedBlocks.length)
+                    $('#block_' + exploredBlock.x + '_' + exploredBlock.y).addClass('explored');
+
+                    if (pathfindingPosition >= path.explored.length)
                     {
 
                         clearInterval(pathfindingInterval);
@@ -166,11 +149,11 @@
 
                             }
 
-                        }, 50);
+                        }, 25);
 
                     }
 
-                }, 50);
+                }, 25);
 
             }
 
