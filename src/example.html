@@ -3,76 +3,27 @@
 <html>
 
     <head>
-
         <title>Pathfinder Example</title>
-        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
         <script src="pathfinder.min.js"></script>
-
-        <style>
-
-            body
-            {
-                background-color: #eee;
-            }
-
-            #grid
-            {
-                width: 100%;
-                height: 100%;
-            }
-
-            .block
-            {
-                position: absolute;
-                width: 10px;
-                height: 10px;
-            }
-
-            .block.blocked
-            {
-                background-color: #999;
-                transform: scale(0.5);
-                border-radius: 100%
-            }
-
-            .block.start, .block.end
-            {
-                background-color: #f00;
-            }
-
-            .block.explored
-            {
-                background-color: #d9d9d9;
-            }
-
-            .block.explored.path
-            {
-                background-color: #aaa;
-            }
-            
-            #rover
-            {
-                z-index: 10;
-                background-color: #000;
-                border-radius: 100%;
-                transform: scale(0.75);
-            }
-
-        </style>
-
     </head>
 
     <body>
 
-        <div id="grid"></div>
+        <canvas id="grid"></canvas>
 
         <script>
 
+            /*
+             * Define a random grid
+             */
             var width     = Math.ceil(Math.random() * 175);
             var height    = Math.ceil(Math.random() * 100);
             var obstacles = Math.ceil(Math.random() * ((width * height) / 1.5));
             var blocked   = [];
 
+            /*
+             * Populate the grid with random obstacles
+             */
             for (var i = 0; i < obstacles; i++)
             {
                 
@@ -83,6 +34,9 @@
 
             }
 
+            /*
+             * Set up the pathfinder with the information defined above
+             */
             var pathfinder = new Pathfinder(width, height, blocked);
             var startX     = Math.ceil(Math.random() * width);
             var startY     = Math.ceil(Math.random() * height);
@@ -91,56 +45,97 @@
             var start      = pathfinder.getBlockAtCoordinate(startX, startY);
             var end        = pathfinder.getBlockAtCoordinate(endX, endY);
 
+            /*
+             * Set up the HTML canvas for drawing
+             */
+            var canvas  = document.getElementById('grid');
+            var context = canvas.getContext('2d');
+
+            canvas.style.width    = (width * 10) + 'px';
+            canvas.style.height   = (height * 10) + 'px';
+            context.canvas.width  = (width * 10);
+            context.canvas.height = (height * 10);
+
             try
             {
 
+                /*
+                 * Find the path
+                 */
+                var path = pathfinder.getNavigationPath(start, end, {allowDiagonals: true});
+
+                /*
+                 * Draw obstacles
+                 */
                 for (var x in pathfinder.grid.blocks)
                 {
 
                     for (var y in pathfinder.grid.blocks[x])
                     {
 
-                        var block = '<div id="block_' + x + '_' + y + '" class="block' + (pathfinder.grid.blocks[x][y].isBlocked ? ' blocked' : '') + '" style="top: ' + (y * 10) + 'px; left: ' + (x * 10) + 'px;"></div>';
-
-                        $('#grid').append(block);
+                        if (pathfinder.grid.blocks[x][y].isBlocked)
+                        {
+                            context.fillStyle = '#999';
+                            context.beginPath();
+                            context.arc((((x - 1) * 10) + 5), (((y - 1) * 10) + 5), 3, 0, (Math.PI + (Math.PI * 2) / 2));
+                            context.fill();
+                        }
 
                     }
 
                 }
 
-                $('#grid').append('<div class="block start" style="top: ' + (start.y * 10) + 'px; left: ' + (start.x * 10) + 'px;"></div>');
-                $('#grid').append('<div class="block end" style="top: ' + (end.y * 10) + 'px; left: ' + (end.x * 10) + 'px;"></div>');
-                $('#grid').append('<div class="block" id="rover" style="top: ' + (start.y * 10) + 'px; left: ' + (start.x * 10) + 'px;"></div>');
+                /*
+                 * Draw start and end points
+                 */
+                context.fillStyle = '#f00';
+                context.beginPath();
+                context.arc((((start.x - 1) * 10) + 5), (((start.y - 1) * 10) + 5), 5, 0, (Math.PI + (Math.PI * 2) / 2));
+                context.fill();
+                context.beginPath();
+                context.arc((((end.x - 1) * 10) + 5), (((end.y - 1) * 10) + 5), 5, 0, (Math.PI + (Math.PI * 2) / 2));
+                context.fill();
 
-                var path                = pathfinder.getNavigationPath(start, end, {allowDiagonals: true});
+                /*
+                 * Draw an incremental reconstruction of the path as it was
+                 * explored
+                 */
                 var pathfindingPosition = 0;
                 var pathfindingInterval = setInterval(function()
                 {
 
                     var exploredBlock = path.explored[pathfindingPosition++];
 
-                    $('#block_' + exploredBlock.x + '_' + exploredBlock.y).addClass('explored');
+                    context.fillStyle = '#d9d9d9';
+                    context.fillRect(((exploredBlock.x - 1) * 10), ((exploredBlock.y - 1) * 10), 10, 10);
 
-                    if (pathfindingPosition >= path.explored.length)
+                    if (pathfindingPosition >= (path.explored.length - 1))
                     {
 
                         clearInterval(pathfindingInterval);
 
-                        var pathPosition  = (path.path.length - 1);
-                        var roverInterval = setInterval(function()
+                        /*
+                         * Draw an incremental reconstruction of the best path
+                         */
+                        var pathPosition = (path.path.length - 2);
+                        var pathInterval = setInterval(function()
                         {
 
                             var pathBlock = path.path[pathPosition];
 
-                            $('#block_' + pathBlock.x + '_' + pathBlock.y).addClass('path');
-                            $('#rover').css({top: (pathBlock.y * 10), left: (pathBlock.x * 10)});
+                            context.fillStyle = '#aaa';
+                            context.fillRect(((pathBlock.x - 1) * 10), ((pathBlock.y - 1) * 10), 10, 10);
 
                             pathPosition--;
 
-                            if (pathPosition < 0)
+                            /*
+                             * When the path has all been drawn, tidy up and
+                             * reload the page
+                             */
+                            if (pathPosition <= 0)
                             {
 
-                                clearInterval(roverInterval);
+                                clearInterval(pathInterval);
 
                                 setTimeout(function()
                                 {
@@ -149,14 +144,18 @@
 
                             }
 
-                        }, 25);
+                        }, 10);
 
                     }
 
-                }, 25);
+                }, 10);
 
             }
 
+            /*
+             * If there was an error (such as no path being found), reload the
+             * page to try another grid
+             */
             catch (exception)
             {
                 location.reload();
