@@ -32,21 +32,54 @@ export default class NavigationPath
 
 
     /**
-     * Reorder an array of adjacent blocks so that the nearest blocks to the
-     * finish block are at the top
-     * @param  {array} adjacentBlocks Array of Block objects
-     * @return {array}                Ordered array of Block objects
+     * Reorder an array of blocks so that the nearest blocks to the finish
+     * block are at the top
+     * @param  {array} blocks              Array of Block objects
+     * @param  {array|object} ignoreBlocks Array or object of Block objects to ignore
+     * @return {array}                     Ordered array of Block objects
      */
-    _reorderAdjacentBlocks(adjacentBlocks = [])
+    _reorderBlocks(blocks = [], ignoreBlocks = [])
     {
 
-        let result = [];
+        let result   = [];
+        let ordered  = [];
+        let toIgnore = {};
 
-        for (let i in adjacentBlocks)
+        /*
+         * Reconstruct the 'ignore' object with the blocks' coordinates as keys
+         */
+        for (let i in ignoreBlocks)
         {
-            let distance  = this.grid.calculateDistanceBetweenBlocks(adjacentBlocks[i], this.to);
-            let index     = Math.round(distance * 1000);
-            result[index] = adjacentBlocks[i];
+            let blockToIgnore             = ignoreBlocks[i];
+            let coordinatesToIgnore       = blockToIgnore.getCoordinates();
+            toIgnore[coordinatesToIgnore] = blockToIgnore;
+        }
+
+        /*
+         * Add each block into a new array, using its rounded distance as its
+         * key
+         */
+        for (let j in blocks)
+        {
+
+            let block       = blocks[j];
+            let coordinates = block.getCoordinates();
+
+            if (typeof(toIgnore[coordinates]) === 'undefined')
+            {
+                let distance   = this.grid.calculateDistanceBetweenBlocks(block, this.to);
+                let index      = Math.round(distance * 1000);
+                ordered[index] = block;
+            }
+
+        }
+
+        /*
+         * Create a final version of the above, using incremental keys instead
+         */
+        for (let k in ordered)
+        {
+            result.push(ordered[k]);
         }
 
         return result;
@@ -85,6 +118,13 @@ export default class NavigationPath
         {
 
             let foundFreeBlock = false;
+            
+            /*
+             * Reorder all path heads so that the ones closest to the
+             * destination are at the top (this will also prune
+             * visitedBlocks from the list of path heads)
+             */
+            pathHeads = this._reorderBlocks(pathHeads, visitedBlocks);
 
             /*
              * Iterate through all path heads and work on those that haven't
@@ -99,21 +139,11 @@ export default class NavigationPath
                 {
 
                     /*
-                     * If the block has been visited already (two or more
-                     * neighbours pushed it onto the stack in the last
-                     * iteration) then skip to the next path head
-                     */
-                    if (typeof(visitedBlocks[block.getCoordinates()]) !== 'undefined')
-                    {
-                        continue;
-                    }
-
-                    /*
                      * Get adjacent blocks to the head and loop through them
                      */
                     foundFreeBlock         = true;
                     let allowDiagonals     = this.options.allowDiagonals;
-                    let adjacentBlocks     = this._reorderAdjacentBlocks(block.getAdjacentBlocks(false, allowDiagonals));
+                    let adjacentBlocks     = this._reorderBlocks(block.getAdjacentBlocks(false, allowDiagonals));
                     let headCoordinates    = block.getCoordinates();
                     let adjacentBlockCount = 1;
                     let closestBlocks      = [];
@@ -134,30 +164,9 @@ export default class NavigationPath
                         if (typeof(visitedBlocks[adjacentBlockCoordinates]) === 'undefined')
                         {
 
-                            /*
-                             * Save the closest blocks to be added to the stack
-                             * later (they need to be added in reverse order at
-                             * the top, so they cannot be added at this time)
-                             */
-                            if (adjacentBlockCount <= Math.ceil(adjacentBlocks.length / 2))
-                            {
-                                closestBlocks.unshift(adjacentBlock);
-                            }
-
-                            /*
-                             * Add the furthest-away blocks to the end of the
-                             * stack, to be explored as last resorts
-                             */
-                            else
-                            {
-                                pathHeads.push(adjacentBlock);
-                            }
-
                             pathHeadHistory[adjacentBlockCoordinates] = block;
 
-                            /*
-                             * Make a note that the block was explored
-                             */
+                            pathHeads.unshift(adjacentBlock);
                             this.explored.push(adjacentBlock);
 
                         }
@@ -190,20 +199,11 @@ export default class NavigationPath
                     }
 
                     /*
-                     * Place the closest adjacent blocks onto the top of the
-                     * stack
-                     */
-                    for (let k in closestBlocks)
-                    {
-                        pathHeads.unshift(closestBlocks[k]);
-                    }
-
-                    /*
                      * Once a block has been dealt with, nullify it so that it
                      * is no longer a path head and other heads know that they
                      * were too slow and should not consider this block
                      */
-                    visitedBlocks[headCoordinates] = true;
+                    visitedBlocks[headCoordinates] = block;
 
                     /*
                      * Break out of the loop, so that the most direct path will
