@@ -175,7 +175,7 @@ export default class NavigationPath
                             while (typeof(previousPathHead) !== 'undefined')
                             {
 
-                                this.path.push(previousPathHead);
+                                this.path.unshift(previousPathHead);
 
                                 previousPathHead = pathHeadHistory[previousPathHead.getCoordinates()];
 

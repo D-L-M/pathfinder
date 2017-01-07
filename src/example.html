@@ -117,7 +117,7 @@
                         /*
                          * Draw an incremental reconstruction of the best path
                          */
-                        var pathPosition = (path.path.length - 2);
+                        var pathPosition = 1;
                         var pathInterval = setInterval(function()
                         {
 
@@ -126,13 +126,13 @@
                             context.fillStyle = '#aaa';
                             context.fillRect(((pathBlock.x - 1) * 10), ((pathBlock.y - 1) * 10), 10, 10);
 
-                            pathPosition--;
+                            pathPosition++;
 
                             /*
                              * When the path has all been drawn, tidy up and
                              * reload the page
                              */
-                            if (pathPosition <= 0)
+                            if (pathPosition >= (path.path.length - 1))
                             {
 
                                 clearInterval(pathInterval);
