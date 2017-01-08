@@ -83,11 +83,11 @@ export default class Grid
      * @param  {Block} outlyingBlock The outlying block that forms the arc limit
      * @return {float}               Degrees between blocks
      */
-    calculateDegreesBetweenBlocks(centreBlock, secondBlock)
+    calculateDegreesBetweenBlocks(centreBlock, outlyingBlock)
     {
 
-        let xDiff   = (centreBlock.x - secondBlock.x);
-        let yDiff   = (centreBlock.y - secondBlock.y);
+        let xDiff   = (centreBlock.x - outlyingBlock.x);
+        let yDiff   = (centreBlock.y - outlyingBlock.y);
         let degrees = (Math.atan2(yDiff, xDiff) * (180 / Math.PI));
 
         if (degrees < 0)
