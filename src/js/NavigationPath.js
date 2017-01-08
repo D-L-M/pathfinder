@@ -96,8 +96,9 @@ export default class NavigationPath
     {
 
         let distance = this.grid.calculateDistanceBetweenBlocks(block, this.to);
+        let degrees  = this.grid.calculateDegreesBetweenBlocks(block, this.to);
 
-        return Math.round(distance * 1000) + (Math.floor(Math.random() * 100));
+        return parseInt(Math.round(distance * 10).toString() + ('000' + Math.round(degrees).toString()).slice(-3));
 
     }
 

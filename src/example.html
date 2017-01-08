@@ -44,6 +44,12 @@
             var endY       = Math.ceil(Math.random() * height);
             var start      = pathfinder.getBlockAtCoordinate(startX, startY);
             var end        = pathfinder.getBlockAtCoordinate(endX, endY);
+            
+            /*
+             * Make sure that the start and end points aren't blocked
+             */
+            start.isBlocked = false;
+            end.isBlocked   = false;
 
             /*
              * Set up the HTML canvas for drawing

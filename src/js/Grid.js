@@ -78,6 +78,29 @@ export default class Grid
 
 
     /**
+     * Calculate the degrees between the arc of two blocks
+     * @param  {Block} centreBlock   The centre block
+     * @param  {Block} outlyingBlock The outlying block that forms the arc limit
+     * @return {float}               Degrees between blocks
+     */
+    calculateDegreesBetweenBlocks(centreBlock, secondBlock)
+    {
+
+        let xDiff   = (centreBlock.x - secondBlock.x);
+        let yDiff   = (centreBlock.y - secondBlock.y);
+        let degrees = (Math.atan2(yDiff, xDiff) * (180 / Math.PI));
+
+        if (degrees < 0)
+        {
+            degrees = (360 + degrees);
+        }
+
+        return degrees
+
+    }
+
+
+    /**
      * Get blocks adjacent to a given block
      * @param  {Block} block          Block object to get adjacent blocks to
      * @param  {bool}  includeBlocked Whether to include blocks that have been marked as 'blocked'
