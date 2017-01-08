@@ -97,7 +97,7 @@ export default class NavigationPath
 
         let distance = this.grid.calculateDistanceBetweenBlocks(block, this.to);
 
-        return Math.round(distance * 100);
+        return Math.round(distance * 1000) + (Math.floor(Math.random() * 100));
 
     }
 
