@@ -67,8 +67,7 @@ export default class NavigationPath
 
             if (typeof(toIgnore[coordinates]) === 'undefined')
             {
-                let distance   = this.grid.calculateDistanceBetweenBlocks(block, this.to);
-                let index      = Math.round(distance * 1000);
+                let index      = this._deriveKeyFromDistance(block);
                 ordered[index] = block;
             }
 
@@ -88,9 +87,24 @@ export default class NavigationPath
 
 
     /**
+     * Generate a key suitable for use in an array based on a block's distance
+     * from the destination block
+     * @param  {Block} block Block object to calculate key for
+     * @return {int}         Numeric index key
+     */
+    _deriveKeyFromDistance(block)
+    {
+
+        let distance = this.grid.calculateDistanceBetweenBlocks(block, this.to);
+
+        return Math.round(distance * 100);
+
+    }
+
+
+    /**
      * Calculate the quickest path between the start and end points
      * @throws exception if it is not possible to plot a path
-     * @todo Allow diagonal movements, but make them 1.41421 times more expensive to make
      */
     _calculatePath()
     {
@@ -108,7 +122,8 @@ export default class NavigationPath
          * Set up an initial path head (a head is the latest block used in a
          * given path) to be the starting block
          */
-        pathHeads.push(from);
+        let index        = this._deriveKeyFromDistance(from);
+        pathHeads[index] = from;
 
         /*
          * this.path will eventually be populated with blocks that form a
@@ -118,13 +133,6 @@ export default class NavigationPath
         {
 
             let foundFreeBlock = false;
-            
-            /*
-             * Reorder all path heads so that the ones closest to the
-             * destination are at the top (this will also prune
-             * visitedBlocks from the list of path heads)
-             */
-            pathHeads = this._reorderBlocks(pathHeads, visitedBlocks);
 
             /*
              * Iterate through all path heads and work on those that haven't
@@ -136,14 +144,21 @@ export default class NavigationPath
                 let block = pathHeads[i];
 
                 /*
+                 * If the block has been visited already then skip to the next
+                 * path head
+                 */
+                if (typeof(visitedBlocks[block.getCoordinates()]) !== 'undefined')
+                {
+                    continue;
+                }
+
+                /*
                 * Get adjacent blocks to the head and loop through them
                 */
-                foundFreeBlock         = true;
-                let allowDiagonals     = this.options.allowDiagonals;
-                let adjacentBlocks     = this._reorderBlocks(block.getAdjacentBlocks(false, allowDiagonals), visitedBlocks);
-                let headCoordinates    = block.getCoordinates();
-                let adjacentBlockCount = 1;
-                let closestBlocks      = [];
+                foundFreeBlock      = true;
+                let allowDiagonals  = this.options.allowDiagonals;
+                let adjacentBlocks  = this._reorderBlocks(block.getAdjacentBlocks(false, allowDiagonals), visitedBlocks);
+                let headCoordinates = block.getCoordinates();
 
                 for (let j in adjacentBlocks)
                 {
@@ -159,7 +174,9 @@ export default class NavigationPath
                     */
                     pathHeadHistory[adjacentBlockCoordinates] = block;
 
-                    pathHeads.unshift(adjacentBlock);
+                    let index        = this._deriveKeyFromDistance(adjacentBlock);
+                    pathHeads[index] = adjacentBlock;
+
                     this.explored.push(adjacentBlock);
 
                     /*
@@ -184,8 +201,6 @@ export default class NavigationPath
 
                     }
 
-                    adjacentBlockCount++;
-
                 }
 
                 /*
@@ -194,6 +209,8 @@ export default class NavigationPath
                 * slow and should not consider this block
                 */
                 visitedBlocks[headCoordinates] = block;
+
+                pathHeads.splice(i, 1);
 
                 /*
                 * Break out of the loop, so that the most direct path will
