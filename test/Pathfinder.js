@@ -8,7 +8,7 @@ describe('Pathfinder', function()
     describe('constructor()', function()
     {
 
-        it('returns a Pathfinder object with grid containing constructor arguments set', function()
+        it('returns a Pathfinder object with a corresponding Grid object', function()
         {
 
             let width      = 12;
@@ -29,6 +29,38 @@ describe('Pathfinder', function()
                 assert.equal(true, isBlocked);
 
             }
+
+        });
+
+        it('can explicitly blacklist blocks', function ()
+        {
+
+            let width      = 2;
+            let height     = 1;
+            let blocked    = ['2,1'];
+            let pathfinder = new Pathfinder(width, height, blocked, false);
+
+            let unblockedBlock = pathfinder.getBlockAtCoordinate(1, 1);
+            let blockedBlock   = pathfinder.getBlockAtCoordinate(2, 1);
+
+            assert.equal(false, unblockedBlock.isBlocked);
+            assert.equal(true, blockedBlock.isBlocked);
+
+        });
+
+        it('can explicitly whitelist blocks', function ()
+        {
+
+            let width      = 2;
+            let height     = 1;
+            let blocked    = ['2,1'];
+            let pathfinder = new Pathfinder(width, height, blocked, true);
+
+            let unblockedBlock = pathfinder.getBlockAtCoordinate(2, 1);
+            let blockedBlock   = pathfinder.getBlockAtCoordinate(1, 1);
+
+            assert.equal(false, unblockedBlock.isBlocked);
+            assert.equal(true, blockedBlock.isBlocked);
 
         });
 
