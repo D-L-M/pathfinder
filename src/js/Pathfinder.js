@@ -8,14 +8,15 @@ export default class Pathfinder
 
     /**
      * Instantiate a Pathfinder object and bootstrap all dependencies
-     * @param {int}   width   Width of grid
-     * @param {int}   height  Height of grid
-     * @param {array} blocked Array of blocked coordinates
+     * @param {int}   width                  Width of grid
+     * @param {int}   height                 Height of grid
+     * @param {array} blocked                Array of blocked coordinates
+     * @param {bool}  blockedListIsClearList Whether to turn blocked into a list of unblocked coordinates
      */
-    constructor(width = 10, height = 10, blocked = [])
+    constructor(width = 10, height = 10, blocked = [], blockedListIsClearList = false)
     {
 
-        this.grid = new Grid(width, height, blocked);
+        this.grid = new Grid(width, height, blocked, blockedListIsClearList);
 
     }
 

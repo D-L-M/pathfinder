@@ -7,11 +7,12 @@ export default class Grid
 
     /**
      * Instantiate a Grid object with a set width and height
-     * @param {int}   width   Width of grid
-     * @param {int}   height  Height of grid
-     * @param {array} blocked Array of blocked coordinates
+     * @param {int}   width                  Width of grid
+     * @param {int}   height                 Height of grid
+     * @param {array} blocked                Array of blocked coordinates
+     * @param {bool}  blockedListIsClearList Whether to turn blocked into a list of unblocked coordinates
      */
-    constructor(width = 10, height = 10, blocked = [])
+    constructor(width = 10, height = 10, blocked = [], blockedListIsClearList = false)
     {
 
         this.width  = width;
@@ -29,7 +30,7 @@ export default class Grid
             for (let y = 1; y <= height; y++)
             {
                 let isBlocked     = (blocked.indexOf(x + ',' + y) > -1);
-                this.blocks[x][y] = new Block(this, x, y, isBlocked);
+                this.blocks[x][y] = new Block(this, x, y, (blockedListIsClearList ? !isBlocked : isBlocked));
             }
 
         }

@@ -31,4 +31,12 @@ var solution   = pathfinder.getNavigationPath(start, finish, options);
 
 In the above example, the `solution` variable has two useful properties: `path`, which is an array of all blocks that comprise the final path; and `explored`, which is an array of all blocks explored, in the order that they were visited.
 
+If it is easier to define a list of coordinates that are _not_ blocked, pass `true` as the final argument to `new Pathfinder()`.
+
 If a path cannot be found an exception will be thrown by `getNavigationPath()`.
+
+If obstacles regularly move, their blocked state can be set in the following manner:
+
+```
+pathfinder.getBlockAtCoordinate(4, 12).isBlocked = true;
+```
