@@ -7,10 +7,10 @@ export default class Block
 
     /**
      * Instantiate a Block object with a set x and y position
-     * @param {Grid} grid      Grid object
-     * @param {int}  x         X coordinate
-     * @param {int}  y         Y coordinate
-     * @param {bool} isBlocked Whether the coordinates are considered 'blocked'
+     * @param {Grid}    grid      Grid object
+     * @param {int}     x         X coordinate
+     * @param {int}     y         Y coordinate
+     * @param {boolean} isBlocked Whether the coordinates are considered 'blocked'
      */
     constructor(grid, x = 1, y = 1, isBlocked = false)
     {
@@ -37,9 +37,9 @@ export default class Block
 
     /**
      * Get blocks adjacent to a given block
-     * @param  {bool}  includeBlocked Whether to include blocks that have been marked as 'blocked'
-     * @param  {bool}  allowDiagonals Whether to allow blocks that are diagonally adjacent
-     * @return {array}                Array of Block objects
+     * @param  {boolean} includeBlocked Whether to include blocks that have been marked as 'blocked'
+     * @param  {boolean} allowDiagonals Whether to allow blocks that are diagonally adjacent
+     * @return {array}                  Array of Block objects
      */
     getAdjacentBlocks(includeBlocked = true, allowDiagonals = true)
     {

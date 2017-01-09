@@ -7,10 +7,10 @@ export default class Grid
 
     /**
      * Instantiate a Grid object with a set width and height
-     * @param {int}   width                  Width of grid
-     * @param {int}   height                 Height of grid
-     * @param {array} blocked                Array of blocked coordinates
-     * @param {bool}  blockedListIsClearList Whether to turn blocked into a list of unblocked coordinates
+     * @param {int}     width                  Width of grid
+     * @param {int}     height                 Height of grid
+     * @param {array}   blocked                Array of blocked coordinates
+     * @param {boolean} blockedListIsClearList Whether to turn blocked into a list of unblocked coordinates
      */
     constructor(width = 10, height = 10, blocked = [], blockedListIsClearList = false)
     {
@@ -43,7 +43,7 @@ export default class Grid
      * @param  {int}   x X coordinate
      * @param  {int}   y Y coordinate
      * @return {Block}   Block object
-     * @throws exception if a block does not exist at the given coordinates
+     * @throws {Error} if a block does not exist at the given coordinates
      */
     getBlockAtCoordinate(x = 1, y = 1)
     {
@@ -55,7 +55,7 @@ export default class Grid
             return blocks[x][y];
         }
 
-        throw 'Block at grid coordinate ' + x + ',' + y + ' does not exist';
+        throw new Error('Block at grid coordinate ' + x + ',' + y + ' does not exist');
 
     }
 
@@ -103,10 +103,10 @@ export default class Grid
 
     /**
      * Get blocks adjacent to a given block
-     * @param  {Block} block          Block object to get adjacent blocks to
-     * @param  {bool}  includeBlocked Whether to include blocks that have been marked as 'blocked'
-     * @param  {bool}  allowDiagonals Whether to allow blocks that are diagonally adjacent
-     * @return {array}                Array of Block objects
+     * @param  {Block}   block          Block object to get adjacent blocks to
+     * @param  {boolean} includeBlocked Whether to include blocks that have been marked as 'blocked'
+     * @param  {boolean} allowDiagonals Whether to allow blocks that are diagonally adjacent
+     * @return {array}                  Array of Block objects
      */
     getAdjacentBlocks(block, includeBlocked = true, allowDiagonals = true)
     {

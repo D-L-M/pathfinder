@@ -12,6 +12,7 @@ export default class NavigationPath
      * @param {Block}  to      Finish block object
      * @param {Grid}   grid    Grid object
      * @param {object} options Optional options object
+     * @throws {Error} if it is not possible to plot a path
      */
     constructor(grid, from, to, options = {})
     {
@@ -105,7 +106,7 @@ export default class NavigationPath
 
     /**
      * Calculate the quickest path between the start and end points
-     * @throws exception if it is not possible to plot a path
+     * @throws {Error} if it is not possible to plot a path
      */
     _calculatePath()
     {
@@ -178,7 +179,10 @@ export default class NavigationPath
                     let index        = this._deriveKeyFromDistance(adjacentBlock);
                     pathHeads[index] = adjacentBlock;
 
-                    this.explored.push(adjacentBlock);
+                    if (this.explored.indexOf(adjacentBlock) === -1)
+                    {
+                        this.explored.push(adjacentBlock);
+                    }
 
                     /*
                     * If the adjacent block is the ending block, look up the
@@ -227,7 +231,7 @@ export default class NavigationPath
              */
             if (!foundFreeBlock)
             {
-                throw 'No path exists between the requested start and end point';
+                throw new Error('No path exists between the requested start and end point');
             }
 
         }
