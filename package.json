@@ -11,6 +11,11 @@
     "vinyl-source-stream": "^1.1.0",
     "vinyl-buffer": "^1.0.0",
     "gulp-uglify": "^2.0.0",
-    "gulp-rename": "^1.2.2"
+    "gulp-rename": "^1.2.2",
+    "mocha": "^3.2.0"
+  },
+  "scripts":
+  {
+    "test": "mocha"
   }
 }
