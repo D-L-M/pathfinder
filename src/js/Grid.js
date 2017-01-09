@@ -45,7 +45,7 @@ export default class Grid
      * @return {Block}   Block object
      * @throws {Error} if a block does not exist at the given coordinates
      */
-    getBlockAtCoordinate(x = 1, y = 1)
+    getBlockAtCoordinates(x = 1, y = 1)
     {
 
         let blocks = this.blocks;

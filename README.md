@@ -23,8 +23,8 @@ var width      = 100;  // Number of blocks wide
 var height     = 50;  // Number of blocks tall
 var obstacles  = ['2,10', '2,11', '33,24'];  // Array of x,y coordinates
 var pathfinder = new Pathfinder(width, height, obstacles);
-var start      = pathfinder.getBlockAtCoordinate(13, 5);  // x, y
-var finish     = pathfinder.getBlockAtCoordinate(75, 47);  // x, y
+var start      = pathfinder.getBlockAtCoordinates(13, 5);  // x, y
+var finish     = pathfinder.getBlockAtCoordinates(75, 47);  // x, y
 var options    = {allowDiagonals: true};  // Whether to allow diagonal movement
 var solution   = pathfinder.getNavigationPath(start, finish, options);
 ```
@@ -38,5 +38,5 @@ If a path cannot be found an exception will be thrown by `getNavigationPath()`.
 If obstacles regularly move, their blocked state can be set in the following manner:
 
 ```
-pathfinder.getBlockAtCoordinate(4, 12).isBlocked = true;
+pathfinder.getBlockAtCoordinates(4, 12).isBlocked = true;
 ```

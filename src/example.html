@@ -59,8 +59,8 @@
             var startY     = Math.ceil(Math.random() * height);
             var endX       = Math.ceil(Math.random() * width);
             var endY       = Math.ceil(Math.random() * height);
-            var start      = pathfinder.getBlockAtCoordinate(startX, startY);
-            var end        = pathfinder.getBlockAtCoordinate(endX, endY);
+            var start      = pathfinder.getBlockAtCoordinates(startX, startY);
+            var end        = pathfinder.getBlockAtCoordinates(endX, endY);
             
             /*
              * Make sure that the start and end points aren't blocked

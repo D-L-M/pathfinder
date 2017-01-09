@@ -28,10 +28,10 @@ export default class Pathfinder
      * @return {Block}   Block object
      * @throws {Error} if a block does not exist at the given coordinates
      */
-    getBlockAtCoordinate(x = 1, y = 1)
+    getBlockAtCoordinates(x = 1, y = 1)
     {
 
-        return this.grid.getBlockAtCoordinate(x, y);
+        return this.grid.getBlockAtCoordinates(x, y);
 
     }
 

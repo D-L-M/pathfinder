@@ -23,7 +23,7 @@ describe('Pathfinder', function()
             for (let i in blocked)
             {
 
-                let block     = pathfinder.getBlockAtCoordinate(blocked[i].split(',')[0], blocked[i].split(',')[1]);
+                let block     = pathfinder.getBlockAtCoordinates(blocked[i].split(',')[0], blocked[i].split(',')[1]);
                 let isBlocked = block.isBlocked;
 
                 assert.equal(true, isBlocked);
@@ -40,8 +40,8 @@ describe('Pathfinder', function()
             let blocked    = ['2,1'];
             let pathfinder = new Pathfinder(width, height, blocked, false);
 
-            let unblockedBlock = pathfinder.getBlockAtCoordinate(1, 1);
-            let blockedBlock   = pathfinder.getBlockAtCoordinate(2, 1);
+            let unblockedBlock = pathfinder.getBlockAtCoordinates(1, 1);
+            let blockedBlock   = pathfinder.getBlockAtCoordinates(2, 1);
 
             assert.equal(false, unblockedBlock.isBlocked);
             assert.equal(true, blockedBlock.isBlocked);
@@ -56,8 +56,8 @@ describe('Pathfinder', function()
             let blocked    = ['2,1'];
             let pathfinder = new Pathfinder(width, height, blocked, true);
 
-            let unblockedBlock = pathfinder.getBlockAtCoordinate(2, 1);
-            let blockedBlock   = pathfinder.getBlockAtCoordinate(1, 1);
+            let unblockedBlock = pathfinder.getBlockAtCoordinates(2, 1);
+            let blockedBlock   = pathfinder.getBlockAtCoordinates(1, 1);
 
             assert.equal(false, unblockedBlock.isBlocked);
             assert.equal(true, blockedBlock.isBlocked);
@@ -66,7 +66,7 @@ describe('Pathfinder', function()
 
     });
 
-    describe('getBlockAtCoordinate()', function()
+    describe('getBlockAtCoordinates()', function()
     {
 
         it('can retrieve a specific block', function ()
@@ -77,8 +77,8 @@ describe('Pathfinder', function()
             let blocked    = ['2,1'];
             let pathfinder = new Pathfinder(width, height, blocked);
 
-            let unblockedBlock = pathfinder.getBlockAtCoordinate(1, 1);
-            let blockedBlock   = pathfinder.getBlockAtCoordinate(2, 1);
+            let unblockedBlock = pathfinder.getBlockAtCoordinates(1, 1);
+            let blockedBlock   = pathfinder.getBlockAtCoordinates(2, 1);
 
             assert.equal(false, unblockedBlock.isBlocked);
             assert.equal(true, blockedBlock.isBlocked);
@@ -94,7 +94,7 @@ describe('Pathfinder', function()
 
             assert.throws(function()
             {
-                pathfinder.getBlockAtCoordinate(4, 4);
+                pathfinder.getBlockAtCoordinates(4, 4);
             }, Error);
 
         });
@@ -110,8 +110,8 @@ describe('Pathfinder', function()
             let width      = 10;
             let height     = 2;
             let pathfinder = new Pathfinder(width, height);
-            let from       = pathfinder.getBlockAtCoordinate(1, 1);
-            let to         = pathfinder.getBlockAtCoordinate(10, 2);
+            let from       = pathfinder.getBlockAtCoordinates(1, 1);
+            let to         = pathfinder.getBlockAtCoordinates(10, 2);
             let path       = pathfinder.getNavigationPath(from, to);
 
             assert.equal(10, path.path.length);
@@ -126,8 +126,8 @@ describe('Pathfinder', function()
             let height     = 1;
             let blocked    = ['5,1'];
             let pathfinder = new Pathfinder(width, height, blocked);
-            let from       = pathfinder.getBlockAtCoordinate(1, 1);
-            let to         = pathfinder.getBlockAtCoordinate(10, 1);
+            let from       = pathfinder.getBlockAtCoordinates(1, 1);
+            let to         = pathfinder.getBlockAtCoordinates(10, 1);
 
             assert.throws(function()
             {
