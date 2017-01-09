@@ -5,10 +5,10 @@ let Pathfinder = require('../dist/pathfinder.min.js');
 describe('Pathfinder', function()
 {
 
-    describe('constructor', function()
+    describe('constructor()', function()
     {
 
-        it('should return a Pathfinder object with grid containing constructor arguments set', function()
+        it('returns a Pathfinder object with grid containing constructor arguments set', function()
         {
 
             let width      = 12;
@@ -29,6 +29,78 @@ describe('Pathfinder', function()
                 assert.equal(true, isBlocked);
 
             }
+
+        });
+
+    });
+
+    describe('getBlockAtCoordinate()', function()
+    {
+
+        it('can retrieve a specific block', function ()
+        {
+
+            let width      = 2;
+            let height     = 1;
+            let blocked    = ['2,1'];
+            let pathfinder = new Pathfinder(width, height, blocked);
+
+            let unblockedBlock = pathfinder.getBlockAtCoordinate(1, 1);
+            let blockedBlock   = pathfinder.getBlockAtCoordinate(2, 1);
+
+            assert.equal(false, unblockedBlock.isBlocked);
+            assert.equal(true, blockedBlock.isBlocked);
+
+        });
+
+        it('throws an Error if an invalid block is requested', function ()
+        {
+
+            let width      = 2;
+            let height     = 1;
+            let pathfinder = new Pathfinder(width, height);
+
+            assert.throws(function()
+            {
+                pathfinder.getBlockAtCoordinate(4, 4);
+            }, Error);
+
+        });
+
+    });
+
+    describe('getNavigationPath()', function()
+    {
+
+        it('can successfully find a basic path', function ()
+        {
+
+            let width      = 10;
+            let height     = 2;
+            let pathfinder = new Pathfinder(width, height);
+            let from       = pathfinder.getBlockAtCoordinate(1, 1);
+            let to         = pathfinder.getBlockAtCoordinate(10, 2);
+            let path       = pathfinder.getNavigationPath(from, to);
+
+            assert.equal(10, path.path.length);
+            assert.equal(18, path.explored.length);
+
+        });
+
+        it('throws an Error if a path cannot be mapped', function ()
+        {
+
+            let width      = 10;
+            let height     = 1;
+            let blocked    = ['5,1'];
+            let pathfinder = new Pathfinder(width, height, blocked);
+            let from       = pathfinder.getBlockAtCoordinate(1, 1);
+            let to         = pathfinder.getBlockAtCoordinate(10, 1);
+
+            assert.throws(function()
+            {
+                pathfinder.getNavigationPath(from, to);
+            }, Error);
 
         });
 
