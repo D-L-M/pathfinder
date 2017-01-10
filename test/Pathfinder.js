@@ -8,7 +8,7 @@ describe('Pathfinder', function()
     describe('constructor()', function()
     {
 
-        it('returns a Pathfinder object with a corresponding Grid object', function()
+        it('returns a Pathfinder object, with a corresponding Grid object', function()
         {
 
             let width      = 12;
@@ -17,7 +17,7 @@ describe('Pathfinder', function()
             let pathfinder = new Pathfinder(width, height, blocked);
 
             assert.equal('object', (typeof pathfinder));
-            assert.equal(width,  pathfinder.grid.width);
+            assert.equal(width, pathfinder.grid.width);
             assert.equal(height, pathfinder.grid.height);
 
             for (let i in blocked)

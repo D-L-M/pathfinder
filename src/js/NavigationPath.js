@@ -35,7 +35,7 @@ export default class NavigationPath
     /**
      * Reorder an array of blocks so that the nearest blocks to the finish
      * block are at the top
-     * @param  {array} blocks              Array of Block objects
+     * @param  {array}        blocks       Array of Block objects
      * @param  {array|object} ignoreBlocks Array or object of Block objects to ignore
      * @return {array}                     Ordered array of Block objects
      */
