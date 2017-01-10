@@ -5,29 +5,24 @@ let Pathfinder = require('../dist/pathfinder.min.js');
 describe('NavigationPath', function()
 {
 
-    describe('constructor()', function()
+    it('is created by Pathfinder, with corresponding properties set', function()
     {
 
-        it('returns a NavigationPath object, with corresponding properties set', function()
-        {
+        let width          = 10;
+        let height         = 10;
+        let pathfinder     = new Pathfinder(width, height);
+        let from           = pathfinder.getBlockAtCoordinates(1, 1);
+        let to             = pathfinder.getBlockAtCoordinates(10, 10);
+        let options        = {allowDiagonals: false};
+        let navigationPath = pathfinder.getNavigationPath(from, to, options);
 
-            let width          = 10;
-            let height         = 10;
-            let pathfinder     = new Pathfinder(width, height);
-            let from           = pathfinder.getBlockAtCoordinates(1, 1);
-            let to             = pathfinder.getBlockAtCoordinates(10, 10);
-            let options        = {allowDiagonals: false};
-            let navigationPath = pathfinder.getNavigationPath(from, to, options);
-
-            assert.equal('object', (typeof navigationPath));
-            assert.equal('object', (typeof navigationPath.grid));
-            assert.equal(width, navigationPath.grid.width);
-            assert.equal(height, navigationPath.grid.height);
-            assert.equal(to, navigationPath.to);
-            assert.equal(from, navigationPath.from);
-            assert.equal(options, navigationPath.options);
-
-        });
+        assert.equal('object', (typeof navigationPath));
+        assert.equal('object', (typeof navigationPath.grid));
+        assert.equal(width, navigationPath.grid.width);
+        assert.equal(height, navigationPath.grid.height);
+        assert.equal(to, navigationPath.to);
+        assert.equal(from, navigationPath.from);
+        assert.equal(options, navigationPath.options);
 
     });
 
