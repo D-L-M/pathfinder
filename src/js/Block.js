@@ -11,9 +11,15 @@ export default class Block
      * @param {int}     x         X coordinate
      * @param {int}     y         Y coordinate
      * @param {boolean} isBlocked Whether the coordinates are considered 'blocked'
+     * @throws {Error} if grid is not a Grid object
      */
     constructor(grid, x = 1, y = 1, isBlocked = false)
     {
+
+        if (!(grid instanceof Grid))
+        {
+            throw new Error('Grid object not provided');
+        }
 
         this.grid      = grid;
         this.x         = x;

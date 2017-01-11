@@ -1,3 +1,4 @@
+import Block from './Block';
 import Grid from './Grid';
 import NavigationPath from './NavigationPath';
 
@@ -42,10 +43,16 @@ export default class Pathfinder
      * @param  {Block}          to       Finish block object
      * @param  {object}         options  Optional options object
      * @return {NavigationPath}          NavigationPath object
+     * @throws {Error} if from and to are not both Block objects
      * @throws {Error} if it is not possible to plot a path
      */
     getNavigationPath(from, to, options = {})
     {
+
+        if (!(from instanceof Block) || !(to instanceof Block))
+        {
+            throw new Error('Two Block objects not provided');
+        }
 
         return new NavigationPath(this.grid, from, to, options);
 

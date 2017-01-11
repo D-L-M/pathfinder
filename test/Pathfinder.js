@@ -136,6 +136,38 @@ describe('Pathfinder', function()
 
         });
 
+        it('throws an Error if valid to and from blocks are not passed', function()
+        {
+
+            let width      = 10;
+            let height     = 1;
+            let blocked    = ['5,1'];
+            let pathfinder = new Pathfinder(width, height, blocked);
+            let from       = pathfinder.getBlockAtCoordinates(1, 1);
+            let to         = pathfinder.getBlockAtCoordinates(10, 1);
+
+            assert.throws(function()
+            {
+                pathfinder.getNavigationPath();
+            }, Error);
+
+            assert.throws(function()
+            {
+                pathfinder.getNavigationPath(from, null);
+            }, Error);
+
+            assert.throws(function()
+            {
+                pathfinder.getNavigationPath(null, to);
+            }, Error);
+
+            assert.throws(function()
+            {
+                pathfinder.getNavigationPath(123, 'abc');
+            }, Error);
+
+        });
+
     });
 
 });

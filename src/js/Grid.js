@@ -65,9 +65,15 @@ export default class Grid
      * @param  {Block} firstBlock  First block to check distance between
      * @param  {Block} secondBlock Second block to check distance between
      * @return {float}             Distance between blocks
+     * @throws {Error} if firstBlock and secondBlock are not both Block objects
      */
     calculateDistanceBetweenBlocks(firstBlock, secondBlock)
     {
+
+        if (!(firstBlock instanceof Block) || !(secondBlock instanceof Block))
+        {
+            throw new Error('Two Block objects not provided');
+        }
 
         let xDiff    = Math.abs(firstBlock.x - secondBlock.x);
         let yDiff    = Math.abs(firstBlock.y - secondBlock.y);
@@ -83,9 +89,15 @@ export default class Grid
      * @param  {Block} centreBlock   The centre block
      * @param  {Block} outlyingBlock The outlying block that forms the arc limit
      * @return {float}               Degrees between blocks
+     * @throws {Error} if centreBlock and outlyingBlock are not both Block objects
      */
     calculateDegreesBetweenBlocks(centreBlock, outlyingBlock)
     {
+
+        if (!(centreBlock instanceof Block) || !(outlyingBlock instanceof Block))
+        {
+            throw new Error('Two Block objects not provided');
+        }
 
         let xDiff   = (centreBlock.x - outlyingBlock.x);
         let yDiff   = (centreBlock.y - outlyingBlock.y);
@@ -107,9 +119,15 @@ export default class Grid
      * @param  {boolean} includeBlocked Whether to include blocks that have been marked as 'blocked'
      * @param  {boolean} allowDiagonals Whether to allow blocks that are diagonally adjacent
      * @return {array}                  Array of Block objects
+     * @throws {Error} if block is not a Block object
      */
     getAdjacentBlocks(block, includeBlocked = true, allowDiagonals = true)
     {
+
+        if (!(block instanceof Block))
+        {
+            throw new Error('Block object not provided');
+        }
 
         let nearby   = [];
         

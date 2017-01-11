@@ -12,15 +12,27 @@ export default class NavigationPath
      * @param {Block}  to      Finish block object
      * @param {Grid}   grid    Grid object
      * @param {object} options Optional options object
+     * @throws {Error} if grid is not a Grid object
+     * @throws {Error} if from and to are not both Block objects
      * @throws {Error} if it is not possible to plot a path
      */
     constructor(grid, from, to, options = {})
     {
 
-        this.grid     = grid;
-        this.from     = from;
-        this.to       = to;
-        this.options  = options;
+        if (!(grid instanceof Grid))
+        {
+            throw new Error('Grid object not provided');
+        }
+
+        if (!(from instanceof Block) || !(to instanceof Block))
+        {
+            throw new Error('Two Block objects not provided');
+        }
+
+        this.grid    = grid;
+        this.from    = from;
+        this.to      = to;
+        this.options = options;
 
         if (typeof this.options.allowDiagonals === 'undefined')
         {
@@ -92,9 +104,15 @@ export default class NavigationPath
      * from the destination block
      * @param  {Block} block Block object to calculate key for
      * @return {int}         Numeric index key
+     * @throws {Error} if block is not a Block object
      */
     _deriveKeyFromDistance(block)
     {
+
+        if (!(block instanceof Block))
+        {
+            throw new Error('Block object not provided');
+        }
 
         let distance = this.grid.calculateDistanceBetweenBlocks(block, this.to);
         let degrees  = this.grid.calculateDegreesBetweenBlocks(block, this.to);

@@ -97,6 +97,38 @@ describe('NavigationPath', function()
 
         });
 
+        it('throws an Error if a valid block is not passed', function()
+        {
+
+            let width          = 10;
+            let height         = 10;
+            let pathfinder     = new Pathfinder(width, height);
+            let from           = pathfinder.getBlockAtCoordinates(1, 1);
+            let to             = pathfinder.getBlockAtCoordinates(10, 10);
+            let navigationPath = pathfinder.getNavigationPath(from, to);
+
+            assert.throws(function()
+            {
+                navigationPath._deriveKeyFromDistance();
+            }, Error);
+
+            assert.throws(function()
+            {
+                navigationPath._deriveKeyFromDistance(null);
+            }, Error);
+
+            assert.throws(function()
+            {
+                navigationPath._deriveKeyFromDistance(123);
+            }, Error);
+
+            assert.throws(function()
+            {
+                navigationPath._deriveKeyFromDistance('abc');
+            }, Error);
+
+        });
+
     });
 
     describe('_calculatePath()', function()

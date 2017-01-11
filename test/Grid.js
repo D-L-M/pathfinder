@@ -82,6 +82,38 @@ describe('Grid', function()
 
         });
 
+        it('throws an Error if two valid blocks are not passed', function()
+        {
+
+            let width       = 10;
+            let height      = 10;
+            let pathfinder  = new Pathfinder(width, height);
+            let grid        = pathfinder.grid;
+            let firstBlock  = grid.getBlockAtCoordinates(2, 3);
+            let secondBlock = grid.getBlockAtCoordinates(7, 2);
+
+            assert.throws(function()
+            {
+                grid.calculateDistanceBetweenBlocks();
+            }, Error);
+
+            assert.throws(function()
+            {
+                grid.calculateDistanceBetweenBlocks(firstBlock, null);
+            }, Error);
+
+            assert.throws(function()
+            {
+                grid.calculateDistanceBetweenBlocks(null, secondBlock);
+            }, Error);
+
+            assert.throws(function()
+            {
+                grid.calculateDistanceBetweenBlocks(123, 'abc');
+            }, Error);
+
+        });
+
     });
 
     describe('calculateDegreesBetweenBlocks()', function()
@@ -102,6 +134,38 @@ describe('Grid', function()
             assert.equal(90, grid.calculateDegreesBetweenBlocks(centreBlock, firstBlock));
             assert.equal(0, grid.calculateDegreesBetweenBlocks(centreBlock, secondBlock));
             assert.equal(306.86989764584405, grid.calculateDegreesBetweenBlocks(centreBlock, thirdBlock));
+
+        });
+
+        it('throws an Error if two valid blocks are not passed', function()
+        {
+
+            let width       = 10;
+            let height      = 10;
+            let pathfinder  = new Pathfinder(width, height);
+            let grid        = pathfinder.grid;
+            let firstBlock  = grid.getBlockAtCoordinates(2, 3);
+            let secondBlock = grid.getBlockAtCoordinates(7, 2);
+
+            assert.throws(function()
+            {
+                grid.calculateDegreesBetweenBlocks();
+            }, Error);
+
+            assert.throws(function()
+            {
+                grid.calculateDegreesBetweenBlocks(firstBlock, null);
+            }, Error);
+
+            assert.throws(function()
+            {
+                grid.calculateDegreesBetweenBlocks(null, secondBlock);
+            }, Error);
+
+            assert.throws(function()
+            {
+                grid.calculateDegreesBetweenBlocks(123, 'abc');
+            }, Error);
 
         });
 
@@ -219,6 +283,36 @@ describe('Grid', function()
             assert.equal('5,4', adjacentBlocks[2].getCoordinates());
             assert.equal('6,4', adjacentBlocks[3].getCoordinates());
             assert.equal('6,6', adjacentBlocks[4].getCoordinates());
+
+        });
+
+        it('throws an Error if a valid block is not passed', function()
+        {
+
+            let width      = 10;
+            let height     = 10;
+            let pathfinder = new Pathfinder(width, height);
+            let grid       = pathfinder.grid;
+
+            assert.throws(function()
+            {
+                grid.getAdjacentBlocks();
+            }, Error);
+
+            assert.throws(function()
+            {
+                grid.getAdjacentBlocks(null);
+            }, Error);
+
+            assert.throws(function()
+            {
+                grid.getAdjacentBlocks(123);
+            }, Error);
+
+            assert.throws(function()
+            {
+                grid.getAdjacentBlocks('abc');
+            }, Error);
 
         });
 
