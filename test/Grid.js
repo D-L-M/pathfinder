@@ -26,6 +26,23 @@ describe('Grid', function()
 
     });
 
+    it('normalises obstacle coordinates', function()
+    {
+
+        let width      = 10;
+        let height     = 10;
+        let obstacles  = ['3,2', '4, 6', '7 ,1', ' 9 , 8 '];
+        let pathfinder = new Pathfinder(width, height, obstacles);
+        let grid       = pathfinder.grid;
+
+        assert.equal(true,  grid.getBlockAtCoordinates(3, 2).isBlocked);
+        assert.equal(true,  grid.getBlockAtCoordinates(4, 6).isBlocked);
+        assert.equal(true,  grid.getBlockAtCoordinates(7, 1).isBlocked);
+        assert.equal(true,  grid.getBlockAtCoordinates(9, 8).isBlocked);
+        assert.equal(false, grid.getBlockAtCoordinates(3, 3).isBlocked);
+
+    });
+
     describe('getBlockAtCoordinates()', function()
     {
 

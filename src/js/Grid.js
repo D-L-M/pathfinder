@@ -20,6 +20,17 @@ export default class Grid
         this.blocks = [];
 
         /*
+         * Normalise the blocked list (remove spaces)
+         */
+        for (let i in blocked)
+        {
+            if (blocked.hasOwnProperty(i))
+            {
+                blocked[i] = blocked[i].split(' ').join('');
+            }
+        }
+
+        /*
          * Create all blocks within the grid
          */
         for (let x = 1; x <= width; x++)
