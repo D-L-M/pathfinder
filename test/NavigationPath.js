@@ -234,10 +234,30 @@ describe('NavigationPath', function()
             let grid           = pathfinder.grid;
             let from           = pathfinder.getBlockAtCoordinates(1, 1);
             let to             = pathfinder.getBlockAtCoordinates(10, 1);
+            let navigationPath = pathfinder.getNavigationPath(from, to);
 
             assert.throws(function()
             {
                 grid.getBlockAtCoordinates(3, 1).isBlocked = true;
+                navigationPath._calculatePath();
+            }, Error);
+
+        });
+
+        it('throws an Error if the end point is blocked', function ()
+        {
+
+            let width          = 10;
+            let height         = 1;
+            let pathfinder     = new Pathfinder(width, height);
+            let grid           = pathfinder.grid;
+            let from           = pathfinder.getBlockAtCoordinates(1, 1);
+            let to             = pathfinder.getBlockAtCoordinates(10, 1);
+            let navigationPath = pathfinder.getNavigationPath(from, to);
+
+            assert.throws(function()
+            {
+                grid.getBlockAtCoordinates(10, 1).isBlocked = true;
                 navigationPath._calculatePath();
             }, Error);
 

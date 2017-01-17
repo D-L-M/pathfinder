@@ -150,6 +150,14 @@ export default class NavigationPath
         let pathHeads       = [];
         let visitedBlocks   = {};
         let pathHeadHistory = {};
+
+        /*
+         * If the end point is blocked, throw an immediate exception
+         */
+        if (to.isBlocked)
+        {
+            throw new Error('Cannot calculate path — end point is blocked');
+        }
         
         /*
          * Set up an initial path head (a head is the latest block used in a
