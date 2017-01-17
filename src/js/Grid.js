@@ -108,7 +108,7 @@ export default class Grid
             degrees = (360 + degrees);
         }
 
-        return degrees
+        return degrees;
 
     }
 

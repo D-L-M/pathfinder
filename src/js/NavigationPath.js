@@ -63,9 +63,14 @@ export default class NavigationPath
          */
         for (let i in ignoreBlocks)
         {
-            let blockToIgnore             = ignoreBlocks[i];
-            let coordinatesToIgnore       = blockToIgnore.getCoordinates();
-            toIgnore[coordinatesToIgnore] = blockToIgnore;
+
+            if (ignoreBlocks.hasOwnProperty(i))
+            {
+                let blockToIgnore             = ignoreBlocks[i];
+                let coordinatesToIgnore       = blockToIgnore.getCoordinates();
+                toIgnore[coordinatesToIgnore] = blockToIgnore;
+            }
+
         }
 
         /*
@@ -75,13 +80,18 @@ export default class NavigationPath
         for (let j in blocks)
         {
 
-            let block       = blocks[j];
-            let coordinates = block.getCoordinates();
-
-            if (typeof(toIgnore[coordinates]) === 'undefined')
+            if (blocks.hasOwnProperty(j))
             {
-                let index      = this._deriveKeyFromDistance(block);
-                ordered[index] = block;
+
+                let block       = blocks[j];
+                let coordinates = block.getCoordinates();
+
+                if (typeof(toIgnore[coordinates]) === 'undefined')
+                {
+                    let index      = this._deriveKeyFromDistance(block);
+                    ordered[index] = block;
+                }
+
             }
 
         }
@@ -91,7 +101,10 @@ export default class NavigationPath
          */
         for (let k in ordered)
         {
-            result.push(ordered[k]);
+            if (ordered.hasOwnProperty(k))
+            {
+                result.push(ordered[k]);
+            }
         }
 
         return result;
@@ -161,85 +174,96 @@ export default class NavigationPath
             for (let i in pathHeads)
             {
 
-                let block = pathHeads[i];
-
-                /*
-                 * If the block has been visited already then skip to the next
-                 * path head
-                 */
-                if (typeof(visitedBlocks[block.getCoordinates()]) !== 'undefined')
-                {
-                    continue;
-                }
-
-                /*
-                * Get adjacent blocks to the head and loop through them
-                */
-                foundFreeBlock      = true;
-                let allowDiagonals  = this.options.allowDiagonals;
-                let adjacentBlocks  = this._reorderBlocks(block.getAdjacentBlocks(false, allowDiagonals), visitedBlocks);
-                let headCoordinates = block.getCoordinates();
-
-                for (let j in adjacentBlocks)
+                if (pathHeads.hasOwnProperty(i))
                 {
 
-                    let adjacentBlock            = adjacentBlocks[j];
-                    let adjacentBlockCoordinates = adjacentBlock.getCoordinates();
+                    let block = pathHeads[i];
 
                     /*
-                    * Add each adjacent block as a path head and add the
-                    * current head to the path head history, tagged with the
-                    * coordinates of the adjacent block (this way, blocks that
-                    * comprise a successful path can be retraced)
-                    */
-                    pathHeadHistory[adjacentBlockCoordinates] = block;
-
-                    let index        = this._deriveKeyFromDistance(adjacentBlock);
-                    pathHeads[index] = adjacentBlock;
-
-                    if (this.explored.indexOf(adjacentBlock) === -1)
+                     * If the block has been visited already then skip to the
+                     * next path head
+                     */
+                    if (typeof(visitedBlocks[block.getCoordinates()]) !== 'undefined')
                     {
-                        this.explored.push(adjacentBlock);
+                        continue;
                     }
 
                     /*
-                    * If the adjacent block is the ending block, look up the
-                    * blocks that comprised the path and add them to this.path
-                    */
-                    if (adjacentBlock.x == to.x && adjacentBlock.y == to.y)
+                     * Get adjacent blocks to the head and loop through them
+                     */
+                    foundFreeBlock      = true;
+                    let allowDiagonals  = this.options.allowDiagonals;
+                    let adjacentBlocks  = this._reorderBlocks(block.getAdjacentBlocks(false, allowDiagonals), visitedBlocks);
+                    let headCoordinates = block.getCoordinates();
+
+                    for (let j in adjacentBlocks)
                     {
 
-                        let previousPathHead = adjacentBlock;
-
-                        while (typeof(previousPathHead) !== 'undefined')
+                        if (adjacentBlocks.hasOwnProperty(j))
                         {
 
-                            this.path.unshift(previousPathHead);
+                            let adjacentBlock            = adjacentBlocks[j];
+                            let adjacentBlockCoordinates = adjacentBlock.getCoordinates();
 
-                            previousPathHead = pathHeadHistory[previousPathHead.getCoordinates()];
+                            /*
+                             * Add each adjacent block as a path head and add
+                             * the current head to the path head history, tagged
+                             * with the coordinates of the adjacent block (this
+                             * way, blocks thatcomprise a successful path can be
+                             * retraced)
+                             */
+                            pathHeadHistory[adjacentBlockCoordinates] = block;
+
+                            let index        = this._deriveKeyFromDistance(adjacentBlock);
+                            pathHeads[index] = adjacentBlock;
+
+                            if (this.explored.indexOf(adjacentBlock) === -1)
+                            {
+                                this.explored.push(adjacentBlock);
+                            }
+
+                            /*
+                             * If the adjacent block is the ending block, look up the
+                             * blocks that comprised the path and add them to this.path
+                             */
+                            if (adjacentBlock.x == to.x && adjacentBlock.y == to.y)
+                            {
+
+                                let previousPathHead = adjacentBlock;
+
+                                while (typeof(previousPathHead) !== 'undefined')
+                                {
+
+                                    this.path.unshift(previousPathHead);
+
+                                    previousPathHead = pathHeadHistory[previousPathHead.getCoordinates()];
+
+                                }
+
+                                return;
+
+                            }
 
                         }
 
-                        return;
-
                     }
 
+                    /*
+                     * Once a block has been dealt with, nullify it so that it
+                     * is no longer a path head and other heads know that they
+                     * were too slow and should not consider this block
+                     */
+                    visitedBlocks[headCoordinates] = block;
+
+                    pathHeads.splice(i, 1);
+
+                    /*
+                     * Break out of the loop, so that the most direct path will
+                     * always be explored first
+                     */
+                    break;
+
                 }
-
-                /*
-                * Once a block has been dealt with, nullify it so that it is no
-                * longer a path head and other heads know that they were too
-                * slow and should not consider this block
-                */
-                visitedBlocks[headCoordinates] = block;
-
-                pathHeads.splice(i, 1);
-
-                /*
-                * Break out of the loop, so that the most direct path will
-                * always be explored first
-                */
-                break;
 
             }
 
