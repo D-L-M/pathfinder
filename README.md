@@ -6,7 +6,7 @@ Pathfinder is a simple JavaScript library that allows you to create a grid compl
 
 The pathfinding algorithm models human behaviour, best described by the analogy of a person wandering a busy city, exploring random streets but always favouring those that lead in the direction of their destination (imagine searching for a tall landmark that you can see in the distance).
 
-This method of searching is generally fairly accurate, although does result in some interesting anomalies such as occasionally looping back on itself, making it suitable for pathfinding that aims to mimic that undertaken by a human.
+This method of searching (loosely based on the A* algorithm) is generally fairly accurate, although does result in some interesting anomalies such as occasionally looping back on itself, making it suitable for pathfinding that aims to mimic that undertaken by a human.
 
 ## Setting Up
 
@@ -31,7 +31,7 @@ var solution   = pathfinder.getNavigationPath(start, finish, options);
 
 In the above example, the `solution` variable has two useful properties: `path`, which is an array of all blocks that comprise the final path; and `explored`, which is an array of all blocks explored, in the order that they were visited.
 
-If it is easier to define a list of coordinates that are _not_ blocked, pass `true` as the final argument to `new Pathfinder()`.
+If it is easier to define a list of coordinates that are _not_ blocked, pass `true` as a fourth argument to `new Pathfinder()`.
 
 If a path cannot be found an exception will be thrown by `getNavigationPath()`.
 
