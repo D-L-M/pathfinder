@@ -1,9 +1,15 @@
 import Grid from './Grid';
 import Block from './Block';
+import NavigationPathOptions from './Interfaces/NavigationPathOptions';
+import BlockObject from './Interfaces/BlockObject';
 
 
 export default class NavigationPath
 {
+
+
+    public path: Block[] = [];
+    public explored: Block[] = [];
 
 
     /**
@@ -16,7 +22,7 @@ export default class NavigationPath
      * @throws {Error} if from and to are not both Block objects
      * @throws {Error} if it is not possible to plot a path
      */
-    constructor(grid, from, to, options = {})
+    constructor(private grid: Grid, private from: Block, private to: Block, private options: NavigationPathOptions)
     {
 
         if (!(grid instanceof Grid))
@@ -28,11 +34,6 @@ export default class NavigationPath
         {
             throw new Error('Two Block objects not provided');
         }
-
-        this.grid    = grid;
-        this.from    = from;
-        this.to      = to;
-        this.options = options;
 
         if (typeof this.options.allowDiagonals === 'undefined')
         {
@@ -47,16 +48,16 @@ export default class NavigationPath
     /**
      * Reorder an array of blocks so that the nearest blocks to the finish
      * block are at the top
-     * @param  {array}        blocks       Array of Block objects
-     * @param  {array|object} ignoreBlocks Array or object of Block objects to ignore
-     * @return {array}                     Ordered array of Block objects
+     * @param  {array} blocks       Array of Block objects
+     * @param  {array} ignoreBlocks Array of Block objects to ignore
+     * @return {array}              Ordered array of Block objects
      */
-    _reorderBlocks(blocks = [], ignoreBlocks = [])
+    _reorderBlocks(blocks: Block[] = [], ignoreBlocks: Block[] = []): Block[]
     {
 
-        let result   = [];
-        let ordered  = [];
-        let toIgnore = {};
+        let result: Block[]       = [];
+        let ordered: Block[]      = [];
+        let toIgnore: BlockObject = {};
 
         /*
          * Reconstruct the 'ignore' object with the blocks' coordinates as keys
@@ -66,9 +67,9 @@ export default class NavigationPath
 
             if (ignoreBlocks.hasOwnProperty(i))
             {
-                let blockToIgnore             = ignoreBlocks[i];
-                let coordinatesToIgnore       = blockToIgnore.getCoordinates();
-                toIgnore[coordinatesToIgnore] = blockToIgnore;
+                let blockToIgnore: Block        = ignoreBlocks[i];
+                let coordinatesToIgnore: string = blockToIgnore.getCoordinates();
+                toIgnore[coordinatesToIgnore]   = blockToIgnore;
             }
 
         }
@@ -83,13 +84,13 @@ export default class NavigationPath
             if (blocks.hasOwnProperty(j))
             {
 
-                let block       = blocks[j];
-                let coordinates = block.getCoordinates();
+                let block: Block        = blocks[j];
+                let coordinates: string = block.getCoordinates();
 
                 if (typeof(toIgnore[coordinates]) === 'undefined')
                 {
-                    let index      = this._deriveKeyFromDistance(block);
-                    ordered[index] = block;
+                    let index: number = this._deriveKeyFromDistance(block);
+                    ordered[index]    = block;
                 }
 
             }
@@ -119,7 +120,7 @@ export default class NavigationPath
      * @return {int}         Numeric index key
      * @throws {Error} if block is not a Block object
      */
-    _deriveKeyFromDistance(block)
+    _deriveKeyFromDistance(block: Block): number
     {
 
         if (!(block instanceof Block))
@@ -127,8 +128,8 @@ export default class NavigationPath
             throw new Error('Block object not provided');
         }
 
-        let distance = this.grid.calculateDistanceBetweenBlocks(block, this.to);
-        let degrees  = this.grid.calculateDegreesBetweenBlocks(block, this.to);
+        let distance: number = this.grid.calculateDistanceBetweenBlocks(block, this.to);
+        let degrees: number  = this.grid.calculateDegreesBetweenBlocks(block, this.to);
 
         return parseInt(Math.round(distance * 10).toString() + ('000' + Math.round(degrees).toString()).slice(-3));
 
@@ -139,17 +140,17 @@ export default class NavigationPath
      * Calculate the quickest path between the start and end points
      * @throws {Error} if it is not possible to plot a path
      */
-    _calculatePath()
+    _calculatePath(): void
     {
 
         this.path     = [];
         this.explored = [];
 
-        let from            = this.from;
-        let to              = this.to;
-        let pathHeads       = [];
-        let visitedBlocks   = {};
-        let pathHeadHistory = {};
+        let from: Block                  = this.from;
+        let to: Block                    = this.to;
+        let pathHeads: Block[]           = [];
+        let visitedBlocks: BlockObject   = {};
+        let pathHeadHistory: BlockObject = {};
 
         /*
          * If the end point is blocked, throw an immediate exception
@@ -163,8 +164,8 @@ export default class NavigationPath
          * Set up an initial path head (a head is the latest block used in a
          * given path) to be the starting block
          */
-        let index        = this._deriveKeyFromDistance(from);
-        pathHeads[index] = from;
+        let index: number = this._deriveKeyFromDistance(from);
+        pathHeads[index]  = from;
 
         /*
          * this.path will eventually be populated with blocks that form a
@@ -173,7 +174,7 @@ export default class NavigationPath
         while (this.path.length == 0)
         {
 
-            let foundFreeBlock = false;
+            let foundFreeBlock: boolean = false;
 
             /*
              * Iterate through all path heads and work on those that haven't
@@ -185,7 +186,7 @@ export default class NavigationPath
                 if (pathHeads.hasOwnProperty(i))
                 {
 
-                    let block = pathHeads[i];
+                    let block: Block = pathHeads[i];
 
                     /*
                      * If the block has been visited already then skip to the
@@ -199,10 +200,11 @@ export default class NavigationPath
                     /*
                      * Get adjacent blocks to the head and loop through them
                      */
-                    foundFreeBlock      = true;
-                    let allowDiagonals  = this.options.allowDiagonals;
-                    let adjacentBlocks  = this._reorderBlocks(block.getAdjacentBlocks(false, allowDiagonals), visitedBlocks);
-                    let headCoordinates = block.getCoordinates();
+                    foundFreeBlock                  = true;
+                    let allowDiagonals: boolean     = this.options.allowDiagonals;
+                    let visitedBlocksArray: Block[] = Object.keys(visitedBlocks).map(key => visitedBlocks[key]);
+                    let adjacentBlocks: Block[]     = this._reorderBlocks(block.getAdjacentBlocks(false, allowDiagonals), visitedBlocksArray);
+                    let headCoordinates: string     = block.getCoordinates();
 
                     for (let j in adjacentBlocks)
                     {
@@ -210,8 +212,8 @@ export default class NavigationPath
                         if (adjacentBlocks.hasOwnProperty(j))
                         {
 
-                            let adjacentBlock            = adjacentBlocks[j];
-                            let adjacentBlockCoordinates = adjacentBlock.getCoordinates();
+                            let adjacentBlock: Block             = adjacentBlocks[j];
+                            let adjacentBlockCoordinates: string = adjacentBlock.getCoordinates();
 
                             /*
                              * Add each adjacent block as a path head and add
@@ -222,8 +224,8 @@ export default class NavigationPath
                              */
                             pathHeadHistory[adjacentBlockCoordinates] = block;
 
-                            let index        = this._deriveKeyFromDistance(adjacentBlock);
-                            pathHeads[index] = adjacentBlock;
+                            let index: number = this._deriveKeyFromDistance(adjacentBlock);
+                            pathHeads[index]  = adjacentBlock;
 
                             if (this.explored.indexOf(adjacentBlock) === -1)
                             {
@@ -237,7 +239,7 @@ export default class NavigationPath
                             if (adjacentBlock.x == to.x && adjacentBlock.y == to.y)
                             {
 
-                                let previousPathHead = adjacentBlock;
+                                let previousPathHead: Block = adjacentBlock;
 
                                 while (typeof(previousPathHead) !== 'undefined')
                                 {
@@ -263,7 +265,7 @@ export default class NavigationPath
                      */
                     visitedBlocks[headCoordinates] = block;
 
-                    pathHeads.splice(i, 1);
+                    pathHeads.splice(parseInt(i), 1);
 
                     /*
                      * Break out of the loop, so that the most direct path will
