@@ -1,6 +1,6 @@
 var gulp       = require('gulp');
 var browserify = require('browserify');
-var babelify   = require('babelify');
+var tsify      = require('tsify');
 var source     = require('vinyl-source-stream');
 var buffer     = require('vinyl-buffer');
 var uglify     = require('gulp-uglify');
@@ -16,10 +16,10 @@ gulp.task('copyHtml', function()
 gulp.task('compileJavaScript', function()
 {
 
-    var bundler = browserify({entries: './src/js/index.js', standalone: 'Pathfinder'});
+    var bundler = browserify({entries: './src/ts/Pathfinder.ts', standalone: 'Pathfinder'});
 
-    bundler.transform('babelify', {presets: ['es2015']});
-    bundler.bundle().pipe(source('index.js')).pipe(buffer()).pipe(uglify()).pipe(rename('pathfinder.min.js')).pipe(gulp.dest('./dist/'));
+    bundler.plugin(tsify, {noImplicitAny: true});
+    bundler.bundle().pipe(source('Pathfinder.ts')).pipe(buffer()).pipe(uglify()).pipe(rename('pathfinder.min.js')).pipe(gulp.dest('./dist/'));
 
 });
 

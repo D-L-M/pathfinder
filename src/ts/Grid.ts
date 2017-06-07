@@ -5,6 +5,9 @@ export default class Grid
 {
 
 
+    private blocks: Block[][];
+
+
     /**
      * Instantiate a Grid object with a set width and height
      * @param {int}     width                  Width of grid
@@ -12,11 +15,9 @@ export default class Grid
      * @param {array}   blocked                Array of blocked coordinates
      * @param {boolean} blockedListIsClearList Whether to turn blocked into a list of unblocked coordinates
      */
-    constructor(width = 10, height = 10, blocked = [], blockedListIsClearList = false)
+    constructor(private width: number = 10, private height: number = 10, blocked: string[] = [], blockedListIsClearList: boolean = false)
     {
 
-        this.width  = width;
-        this.height = height;
         this.blocks = [];
 
         /*
@@ -33,15 +34,15 @@ export default class Grid
         /*
          * Create all blocks within the grid
          */
-        for (let x = 1; x <= width; x++)
+        for (let x: number = 1; x <= width; x++)
         {
 
             this.blocks[x] = [];
 
-            for (let y = 1; y <= height; y++)
+            for (let y: number = 1; y <= height; y++)
             {
-                let isBlocked     = (blocked.indexOf(x + ',' + y) > -1);
-                this.blocks[x][y] = new Block(this, x, y, (blockedListIsClearList ? !isBlocked : isBlocked));
+                let isBlocked: boolean = (blocked.indexOf(x + ',' + y) > -1);
+                this.blocks[x][y]      = new Block(this, x, y, (blockedListIsClearList ? !isBlocked : isBlocked));
             }
 
         }
@@ -56,10 +57,10 @@ export default class Grid
      * @return {Block}   Block object
      * @throws {Error} if a block does not exist at the given coordinates
      */
-    getBlockAtCoordinates(x = 1, y = 1)
+    getBlockAtCoordinates(x: number = 1, y: number = 1): Block
     {
 
-        let blocks = this.blocks;
+        let blocks: Block[][] = this.blocks;
 
         if (typeof(blocks[x]) !== 'undefined' && typeof(blocks[x][y]) !== 'undefined')
         {
@@ -78,7 +79,7 @@ export default class Grid
      * @return {float}             Distance between blocks
      * @throws {Error} if firstBlock and secondBlock are not both Block objects
      */
-    calculateDistanceBetweenBlocks(firstBlock, secondBlock)
+    calculateDistanceBetweenBlocks(firstBlock: Block, secondBlock: Block): number
     {
 
         if (!(firstBlock instanceof Block) || !(secondBlock instanceof Block))
@@ -86,9 +87,9 @@ export default class Grid
             throw new Error('Two Block objects not provided');
         }
 
-        let xDiff    = Math.abs(firstBlock.x - secondBlock.x);
-        let yDiff    = Math.abs(firstBlock.y - secondBlock.y);
-        let distance = Math.sqrt((xDiff * xDiff) + (yDiff * yDiff));
+        let xDiff: number    = Math.abs(firstBlock.x - secondBlock.x);
+        let yDiff: number    = Math.abs(firstBlock.y - secondBlock.y);
+        let distance: number = Math.sqrt((xDiff * xDiff) + (yDiff * yDiff));
 
         return distance;
 
@@ -102,7 +103,7 @@ export default class Grid
      * @return {float}               Degrees between blocks
      * @throws {Error} if centreBlock and outlyingBlock are not both Block objects
      */
-    calculateDegreesBetweenBlocks(centreBlock, outlyingBlock)
+    calculateDegreesBetweenBlocks(centreBlock: Block, outlyingBlock: Block): number
     {
 
         if (!(centreBlock instanceof Block) || !(outlyingBlock instanceof Block))
@@ -110,9 +111,9 @@ export default class Grid
             throw new Error('Two Block objects not provided');
         }
 
-        let xDiff   = (centreBlock.x - outlyingBlock.x);
-        let yDiff   = (centreBlock.y - outlyingBlock.y);
-        let degrees = (Math.atan2(yDiff, xDiff) * (180 / Math.PI));
+        let xDiff: number   = (centreBlock.x - outlyingBlock.x);
+        let yDiff: number   = (centreBlock.y - outlyingBlock.y);
+        let degrees: number = (Math.atan2(yDiff, xDiff) * (180 / Math.PI));
 
         if (degrees < 0)
         {
@@ -132,7 +133,7 @@ export default class Grid
      * @return {array}                  Array of Block objects
      * @throws {Error} if block is not a Block object
      */
-    getAdjacentBlocks(block, includeBlocked = true, allowDiagonals = true)
+    getAdjacentBlocks(block: Block, includeBlocked: boolean = true, allowDiagonals: boolean = true): Block[]
     {
 
         if (!(block instanceof Block))
@@ -140,25 +141,25 @@ export default class Grid
             throw new Error('Block object not provided');
         }
 
-        let nearby   = [];
+        let nearby: Block[] = [];
         
         /*
          * Traverse the rows
          */
-        for (let x = -1; x <= 1; x++)
+        for (let x: number = -1; x <= 1; x++)
         {
 
             /*
             * Traverse the columns
             */
-            for (let y = -1; y <= 1; y++)
+            for (let y: number = -1; y <= 1; y++)
             {
 
-                let targetX       = (block.x + x);
-                let targetY       = (block.y + y);
-                let isCentreBlock = (x == 0 & y == 0);
-                let isOnGrid      = (targetX > 0 && targetX <= this.width && targetY > 0 && targetY <= this.height);
-                let isDiagonal    = ((x == -1 && y == -1) || (x == -1 && y == 1) || (x == 1 && y == 1) || (x == 1 && y == -1));
+                let targetX: number        = (block.x + x);
+                let targetY: number        = (block.y + y);
+                let isCentreBlock: boolean = (x == 0 && y == 0);
+                let isOnGrid: boolean      = (targetX > 0 && targetX <= this.width && targetY > 0 && targetY <= this.height);
+                let isDiagonal: boolean    = ((x == -1 && y == -1) || (x == -1 && y == 1) || (x == 1 && y == 1) || (x == 1 && y == -1));
 
                 /*
                  * Only include blocks that are actual neighbours and haven't
@@ -167,7 +168,7 @@ export default class Grid
                 if (!isCentreBlock && isOnGrid && (!isDiagonal || allowDiagonals))
                 {
 
-                    let targetBlock = this.blocks[targetX][targetY];
+                    let targetBlock: Block = this.blocks[targetX][targetY];
 
                     if (includeBlocked || !targetBlock.isBlocked)
                     {
