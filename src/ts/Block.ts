@@ -13,7 +13,7 @@ export default class Block
      * @param {boolean} isBlocked Whether the coordinates are considered 'blocked'
      * @throws {Error} if grid is not a Grid object
      */
-    constructor(private grid: Grid, public x: number = 1, public y: number = 1, public isBlocked: boolean = false)
+    public constructor(private grid: Grid, public x: number = 1, public y: number = 1, public isBlocked: boolean = false)
     {
 
         if (!(grid instanceof Grid))
@@ -28,7 +28,7 @@ export default class Block
      * Get the block's coordinates as a string ('x,y')
      * @return {string} Coordinates of the block
      */
-    getCoordinates(): string
+    public getCoordinates(): string
     {
 
         return this.x + ',' + this.y;
@@ -42,7 +42,7 @@ export default class Block
      * @param  {boolean} allowDiagonals Whether to allow blocks that are diagonally adjacent
      * @return {array}                  Array of Block objects
      */
-    getAdjacentBlocks(includeBlocked: boolean = true, allowDiagonals: boolean = true): Block[]
+    public getAdjacentBlocks(includeBlocked: boolean = true, allowDiagonals: boolean = true): Block[]
     {
 
         return this.grid.getAdjacentBlocks(this, includeBlocked, allowDiagonals);

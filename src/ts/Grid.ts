@@ -5,6 +5,10 @@ export default class Grid
 {
 
 
+    /**
+     * Multidimensionl array of Block objects
+     * @property {array} blocks
+     */
     private blocks: Block[][];
 
 
@@ -15,7 +19,7 @@ export default class Grid
      * @param {array}   blocked                Array of blocked coordinates
      * @param {boolean} blockedListIsClearList Whether to turn blocked into a list of unblocked coordinates
      */
-    constructor(private width: number = 10, private height: number = 10, blocked: string[] = [], blockedListIsClearList: boolean = false)
+    public constructor(private width: number = 10, private height: number = 10, blocked: string[] = [], blockedListIsClearList: boolean = false)
     {
 
         this.blocks = [];
@@ -57,7 +61,7 @@ export default class Grid
      * @return {Block}   Block object
      * @throws {Error} if a block does not exist at the given coordinates
      */
-    getBlockAtCoordinates(x: number = 1, y: number = 1): Block
+    public getBlockAtCoordinates(x: number = 1, y: number = 1): Block
     {
 
         let blocks: Block[][] = this.blocks;
@@ -79,7 +83,7 @@ export default class Grid
      * @return {float}             Distance between blocks
      * @throws {Error} if firstBlock and secondBlock are not both Block objects
      */
-    calculateDistanceBetweenBlocks(firstBlock: Block, secondBlock: Block): number
+    public calculateDistanceBetweenBlocks(firstBlock: Block, secondBlock: Block): number
     {
 
         if (!(firstBlock instanceof Block) || !(secondBlock instanceof Block))
@@ -103,7 +107,7 @@ export default class Grid
      * @return {float}               Degrees between blocks
      * @throws {Error} if centreBlock and outlyingBlock are not both Block objects
      */
-    calculateDegreesBetweenBlocks(centreBlock: Block, outlyingBlock: Block): number
+    public calculateDegreesBetweenBlocks(centreBlock: Block, outlyingBlock: Block): number
     {
 
         if (!(centreBlock instanceof Block) || !(outlyingBlock instanceof Block))
@@ -133,7 +137,7 @@ export default class Grid
      * @return {array}                  Array of Block objects
      * @throws {Error} if block is not a Block object
      */
-    getAdjacentBlocks(block: Block, includeBlocked: boolean = true, allowDiagonals: boolean = true): Block[]
+    public getAdjacentBlocks(block: Block, includeBlocked: boolean = true, allowDiagonals: boolean = true): Block[]
     {
 
         if (!(block instanceof Block))
