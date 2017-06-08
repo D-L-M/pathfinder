@@ -1,7 +1,7 @@
 import Grid from './Grid';
 import Block from './Block';
-import NavigationPathOptions from './Interfaces/NavigationPathOptions';
-import BlockObject from './Interfaces/BlockObject';
+import INavigationPathOptions from './Interfaces/INavigationPathOptions';
+import IBlockObject from './Interfaces/IBlockObject';
 
 
 export default class NavigationPath
@@ -22,7 +22,7 @@ export default class NavigationPath
      * @throws {Error} if from and to are not both Block objects
      * @throws {Error} if it is not possible to plot a path
      */
-    constructor(private grid: Grid, private from: Block, private to: Block, private options: NavigationPathOptions)
+    constructor(private grid: Grid, private from: Block, private to: Block, private options: INavigationPathOptions)
     {
 
         if (!(grid instanceof Grid))
@@ -55,9 +55,9 @@ export default class NavigationPath
     _reorderBlocks(blocks: Block[] = [], ignoreBlocks: Block[] = []): Block[]
     {
 
-        let result: Block[]       = [];
-        let ordered: Block[]      = [];
-        let toIgnore: BlockObject = {};
+        let result: Block[]        = [];
+        let ordered: Block[]       = [];
+        let toIgnore: IBlockObject = {};
 
         /*
          * Reconstruct the 'ignore' object with the blocks' coordinates as keys
@@ -146,11 +146,11 @@ export default class NavigationPath
         this.path     = [];
         this.explored = [];
 
-        let from: Block                  = this.from;
-        let to: Block                    = this.to;
-        let pathHeads: Block[]           = [];
-        let visitedBlocks: BlockObject   = {};
-        let pathHeadHistory: BlockObject = {};
+        let from: Block                   = this.from;
+        let to: Block                     = this.to;
+        let pathHeads: Block[]            = [];
+        let visitedBlocks: IBlockObject   = {};
+        let pathHeadHistory: IBlockObject = {};
 
         /*
          * If the end point is blocked, throw an immediate exception

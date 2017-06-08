@@ -1,7 +1,7 @@
 import Block from './Block';
 import Grid from './Grid';
 import NavigationPath from './NavigationPath';
-import NavigationPathOptions from './Interfaces/NavigationPathOptions';
+import INavigationPathOptions from './Interfaces/INavigationPathOptions';
 
 
 class Pathfinder
@@ -50,7 +50,7 @@ class Pathfinder
      * @throws {Error} if from and to are not both Block objects
      * @throws {Error} if it is not possible to plot a path
      */
-    getNavigationPath(from: Block, to: Block, options: NavigationPathOptions = {allowDiagonals: true}): NavigationPath
+    getNavigationPath(from: Block, to: Block, options: INavigationPathOptions = {allowDiagonals: true}): NavigationPath
     {
 
         if (!(from instanceof Block) || !(to instanceof Block))
