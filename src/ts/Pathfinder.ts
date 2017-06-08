@@ -8,6 +8,10 @@ class Pathfinder
 {
 
 
+    /**
+     * Grid object on which paths will be found
+     * @property {Grid} grid
+     */
     private grid: Grid;
 
 
@@ -18,7 +22,7 @@ class Pathfinder
      * @param {array}   blocked                Array of blocked coordinates
      * @param {boolean} blockedListIsClearList Whether to turn blocked into a list of unblocked coordinates
      */
-    constructor(width: number = 10, height: number = 10, blocked: string[] = [], blockedListIsClearList: boolean = false)
+    public constructor(width: number = 10, height: number = 10, blocked: string[] = [], blockedListIsClearList: boolean = false)
     {
 
         this.grid = new Grid(width, height, blocked, blockedListIsClearList);
@@ -33,7 +37,7 @@ class Pathfinder
      * @return {Block}   Block object
      * @throws {Error} if a block does not exist at the given coordinates
      */
-    getBlockAtCoordinates(x: number = 1, y: number = 1): Block
+    public getBlockAtCoordinates(x: number = 1, y: number = 1): Block
     {
 
         return this.grid.getBlockAtCoordinates(x, y);
@@ -50,7 +54,7 @@ class Pathfinder
      * @throws {Error} if from and to are not both Block objects
      * @throws {Error} if it is not possible to plot a path
      */
-    getNavigationPath(from: Block, to: Block, options: INavigationPathOptions = {allowDiagonals: true}): NavigationPath
+    public getNavigationPath(from: Block, to: Block, options: INavigationPathOptions = {allowDiagonals: true}): NavigationPath
     {
 
         if (!(from instanceof Block) || !(to instanceof Block))

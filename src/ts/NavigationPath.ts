@@ -8,7 +8,17 @@ export default class NavigationPath
 {
 
 
+    /**
+     * Array of Block objects that make up the path
+     * @property {array} path
+     */
     public path: Block[] = [];
+    
+
+    /**
+     * Array of Block objects that have been explored
+     * @property {array} explored
+     */
     public explored: Block[] = [];
 
 
@@ -22,7 +32,7 @@ export default class NavigationPath
      * @throws {Error} if from and to are not both Block objects
      * @throws {Error} if it is not possible to plot a path
      */
-    constructor(private grid: Grid, private from: Block, private to: Block, private options: INavigationPathOptions)
+    public constructor(private grid: Grid, private from: Block, private to: Block, private options: INavigationPathOptions)
     {
 
         if (!(grid instanceof Grid))
@@ -52,7 +62,7 @@ export default class NavigationPath
      * @param  {array} ignoreBlocks Array of Block objects to ignore
      * @return {array}              Ordered array of Block objects
      */
-    _reorderBlocks(blocks: Block[] = [], ignoreBlocks: Block[] = []): Block[]
+    private _reorderBlocks(blocks: Block[] = [], ignoreBlocks: Block[] = []): Block[]
     {
 
         let result: Block[]        = [];
@@ -120,7 +130,7 @@ export default class NavigationPath
      * @return {int}         Numeric index key
      * @throws {Error} if block is not a Block object
      */
-    _deriveKeyFromDistance(block: Block): number
+    private _deriveKeyFromDistance(block: Block): number
     {
 
         if (!(block instanceof Block))
@@ -140,7 +150,7 @@ export default class NavigationPath
      * Calculate the quickest path between the start and end points
      * @throws {Error} if it is not possible to plot a path
      */
-    _calculatePath(): void
+    private _calculatePath(): void
     {
 
         this.path     = [];
