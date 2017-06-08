@@ -2,7 +2,7 @@
 
 ![](https://travis-ci.org/D-L-M/pathfinder.svg?branch=master)
 
-Pathfinder is a simple JavaScript library that allows you to create a grid complete with traversable and non-traversable blocks, then plot a path between two points.
+Pathfinder is a simple TypeScript library (transpiling to JavaScript) that allows you to create a grid complete with traversable and non-traversable blocks, then plot a path between two points.
 
 The pathfinding algorithm models human behaviour, best described by the analogy of a person wandering a busy city, exploring random streets but always favouring those that lead in the direction of their destination (imagine searching for a tall landmark that you can see in the distance).
 
