@@ -1,9 +1,10 @@
-let assert     = require('assert');
-let Pathfinder = require('../dist/pathfinder.min.js');
+import { assert } from 'chai';
+import { Pathfinder } from '../dist/Pathfinder';
 
 
 describe('Block', function()
 {
+
 
     it('is created by Pathfinder, with corresponding properties set', function()
     {
@@ -18,13 +19,15 @@ describe('Block', function()
         assert.equal(x, block.x);
         assert.equal(y, block.y);
         assert.equal(false, block.isBlocked);
-        assert.equal(width, block.grid.width);
-        assert.equal(height, block.grid.height);
+        assert.equal(width, block.getGrid().getWidth());
+        assert.equal(height, block.getGrid().getHeight());
 
     });
 
+
     describe('getCoordinates()', function()
     {
+
 
         it('returns correct coordinates', function()
         {
@@ -40,10 +43,13 @@ describe('Block', function()
 
         });
 
+
     });
+
 
     describe('getAdjacentBlocks()', function()
     {
+
 
         it('gets all adjacent blocks when all are available', function()
         {
@@ -68,6 +74,7 @@ describe('Block', function()
 
         });
 
+
         it('gets all available adjacent blocks when at edge', function()
         {
 
@@ -88,6 +95,7 @@ describe('Block', function()
 
         });
 
+
         it('gets all adjacent blocks except for diagonals', function()
         {
 
@@ -106,6 +114,7 @@ describe('Block', function()
             assert.equal('6,5', adjacentBlocks[3].getCoordinates());
 
         });
+
 
         it('gets all adjacent blocks, including blocked', function()
         {
@@ -131,6 +140,7 @@ describe('Block', function()
 
         });
 
+
         it('gets all adjacent blocks, excluding blocked', function()
         {
 
@@ -152,6 +162,8 @@ describe('Block', function()
 
         });
 
+
     });
+
 
 });

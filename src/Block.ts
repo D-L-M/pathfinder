@@ -1,25 +1,31 @@
-import Grid from './Grid';
+import { Grid } from './Grid';
 
 
-export default class Block
+/**
+ * Block class
+ */
+export class Block
 {
 
 
     /**
      * Instantiate a Block object with a set x and y position
-     * @param {Grid}    grid      Grid object
+     * @param {Grid}    _grid     Grid object
      * @param {int}     x         X coordinate
      * @param {int}     y         Y coordinate
      * @param {boolean} isBlocked Whether the coordinates are considered 'blocked'
-     * @throws {Error} if grid is not a Grid object
      */
-    public constructor(private grid: Grid, public x: number = 1, public y: number = 1, public isBlocked: boolean = false)
+    public constructor(protected _grid: Grid, public x: number = 1, public y: number = 1, public isBlocked: boolean = false) {}
+
+
+    /**
+     * Get the grid to which the block belongs
+     * @return {Grid} Grid object to which the block belongs
+     */
+    public getGrid(): Grid
     {
 
-        if (!(grid instanceof Grid))
-        {
-            throw new Error('Grid object not provided');
-        }
+        return this._grid;
 
     }
 
@@ -45,7 +51,7 @@ export default class Block
     public getAdjacentBlocks(includeBlocked: boolean = true, allowDiagonals: boolean = true): Block[]
     {
 
-        return this.grid.getAdjacentBlocks(this, includeBlocked, allowDiagonals);
+        return this._grid.getAdjacentBlocks(this, includeBlocked, allowDiagonals);
 
     }
 

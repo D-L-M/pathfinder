@@ -2,31 +2,31 @@
 
 ![](https://travis-ci.org/D-L-M/pathfinder.svg?branch=master)
 
-Pathfinder is a simple TypeScript library (transpiling to JavaScript) that allows you to create a grid complete with traversable and non-traversable blocks, then plot a path between two points.
+Pathfinder is a simple Node.js/TypeScript library that allows you to create a grid complete with traversable and non-traversable blocks, then plot a path between two points.
 
-The pathfinding algorithm models human behaviour, best described by the analogy of a person wandering a busy city, exploring random streets but always favouring those that lead in the direction of their destination (imagine searching for a tall landmark that you can see in the distance).
+The pathfinding algorithm is loosely based upon the A* algorithm, operating by exploring adjacent blocks but favouring those that provide the shortest line-of-sight to the destination. The resultant paths are fairly accurate, although do sometimes contain interesting anomalies such as looping back on themselves, making the library suitable for pathfinding that aims to mimic that undertaken by a human.
 
-This method of searching (loosely based on the A* algorithm) is generally fairly accurate, although does result in some interesting anomalies such as occasionally looping back on itself, making it suitable for pathfinding that aims to mimic that undertaken by a human.
+## Installation
 
-## Setting Up
-
-To compile the Pathfinder library, run `npm install` and then `gulp all`. The library will be compiled and minified to `dist/pathfinder.min.js`.
+```bash
+$ npm install --save simple-pathfinder
+```
 
 ## Usage
 
-See `dist/example.html` for an example of usage to plot a path through a random assortment of obstacles.
+Basic usage is as follows:
 
-Basic usage is:
+```typescript
+import { Pathfinder, Block, INavigationPathOptions, NavigationPath } from 'simple-pathfinder';
 
-```
-var width      = 100;  // Number of blocks wide
-var height     = 50;  // Number of blocks tall
-var obstacles  = ['2,10', '2,11', '33,24'];  // Array of x,y coordinates
-var pathfinder = new Pathfinder(width, height, obstacles);
-var start      = pathfinder.getBlockAtCoordinates(13, 5);  // x, y
-var finish     = pathfinder.getBlockAtCoordinates(75, 47);  // x, y
-var options    = {allowDiagonals: true};  // Whether to allow diagonal movement
-var solution   = pathfinder.getNavigationPath(start, finish, options);
+let width: number                   = 100;  // Number of blocks wide
+let height: number                  = 50;  // Number of blocks tall
+let obstacles: string[]             = ['2,10', '2,11', '33,24'];  // Array of x,y coordinates
+let pathfinder: Pathfinder          = new Pathfinder(width, height, obstacles);
+let start: Block                    = pathfinder.getBlockAtCoordinates(13, 5);  // x, y
+let finish: Block                   = pathfinder.getBlockAtCoordinates(75, 47);  // x, y
+let options: INavigationPathOptions = {allowDiagonals: true};  // Whether to allow diagonal movement
+let solution: NavigationPath        = pathfinder.getNavigationPath(start, finish, options);
 ```
 
 In the above example, the `solution` variable has two useful properties: `path`, which is an array of all blocks that comprise the final path; and `explored`, which is an array of all blocks explored, in the order that they were visited.
@@ -37,6 +37,6 @@ If a path cannot be found an exception will be thrown by `getNavigationPath()`.
 
 If obstacles regularly move, their blocked state can be set in the following manner:
 
-```
+```typescript
 pathfinder.getBlockAtCoordinates(4, 12).isBlocked = true;
 ```

@@ -1,21 +1,28 @@
 {
-  "name": "pathfinder",
+  "name": "simple-pathfinder",
+  "description": "A simple pathfinding library",
   "version": "1.0.1",
-  "author": "david@dmaidment.co.uk",
-  "dependencies":
-  {
-    "gulp": "^3.9.1",
-    "typescript": "^2.3.4",
-    "browserify": "^13.1.1",
-    "vinyl-source-stream": "^1.1.0",
-    "vinyl-buffer": "^1.0.0",
-    "tsify": "^3.0.1",
-    "gulp-uglify": "^2.0.0",
-    "gulp-rename": "^1.2.2",
-    "mocha": "^3.2.0"
+  "author": "David Maidment <david@dmaidment.co.uk>",
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/D-L-M/pathfinder"
   },
-  "scripts":
-  {
-    "test": "mocha"
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^2.3.4",
+    "ts-node": "^3.0.6",
+    "mocha": "^3.4.2",
+    "chai": "^4.0.2",
+    "@types/chai": "^4.0.0",
+    "@types/mocha": "^2.2.41"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "npm run transpile && mocha -r ts-node/register test/**/*.ts",
+    "transpile": "tsc -p ./src --outDir dist/",
+    "publish-to-npm": "npm install && npm test && npm run transpile && npm publish"
   }
 }

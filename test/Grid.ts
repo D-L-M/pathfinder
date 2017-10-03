@@ -1,9 +1,10 @@
-let assert     = require('assert');
-let Pathfinder = require('../dist/pathfinder.min.js');
+import { assert } from 'chai';
+import { Pathfinder } from '../dist/Pathfinder';
 
 
 describe('Grid', function()
 {
+
 
     it('is created by Pathfinder, with corresponding properties set', function()
     {
@@ -13,18 +14,19 @@ describe('Grid', function()
         let x          = 4;
         let y          = 7;
         let pathfinder = new Pathfinder(width, height);
-        let grid       = pathfinder.grid;
-        let block      = grid.blocks[x][y];
+        let grid       = pathfinder.getGrid();
+        let block      = grid.getBlocks()[x][y];
 
-        assert.equal(width, grid.width);
-        assert.equal(height, grid.height);
+        assert.equal(width, grid.getWidth());
+        assert.equal(height, grid.getHeight());
         assert.equal(x, block.x);
         assert.equal(y, block.y);
         assert.equal(false, block.isBlocked);
-        assert.equal(width, block.grid.width);
-        assert.equal(height, block.grid.height);
+        assert.equal(width, block.getGrid().getWidth());
+        assert.equal(height, block.getGrid().getHeight());
 
     });
+
 
     it('normalises obstacle coordinates', function()
     {
@@ -33,7 +35,7 @@ describe('Grid', function()
         let height     = 10;
         let obstacles  = ['3,2', '4, 6', '7 ,1', ' 9 , 8 '];
         let pathfinder = new Pathfinder(width, height, obstacles);
-        let grid       = pathfinder.grid;
+        let grid       = pathfinder.getGrid();
 
         assert.equal(true,  grid.getBlockAtCoordinates(3, 2).isBlocked);
         assert.equal(true,  grid.getBlockAtCoordinates(4, 6).isBlocked);
@@ -43,8 +45,10 @@ describe('Grid', function()
 
     });
 
+
     describe('getBlockAtCoordinates()', function()
     {
+
 
         it('can retrieve a specific block', function()
         {
@@ -54,7 +58,7 @@ describe('Grid', function()
             let x          = 2;
             let y          = 6;
             let pathfinder = new Pathfinder(width, height);
-            let grid       = pathfinder.grid;
+            let grid       = pathfinder.getGrid();
             let block      = grid.getBlockAtCoordinates(x, y);
 
             assert.equal(x, block.x);
@@ -62,13 +66,14 @@ describe('Grid', function()
 
         });
 
+
         it('throws an Error if an invalid block is requested', function ()
         {
 
             let width      = 2;
             let height     = 1;
             let pathfinder = new Pathfinder(width, height);
-            let grid       = pathfinder.grid;
+            let grid       = pathfinder.getGrid();
 
             assert.throws(function()
             {
@@ -77,10 +82,13 @@ describe('Grid', function()
 
         });
 
+
     });
+
 
     describe('calculateDistanceBetweenBlocks()', function()
     {
+
 
         it('calculates the correct distance between two blocks', function()
         {
@@ -88,7 +96,7 @@ describe('Grid', function()
             let width       = 10;
             let height      = 10;
             let pathfinder  = new Pathfinder(width, height);
-            let grid        = pathfinder.grid;
+            let grid        = pathfinder.getGrid();
             let firstBlock  = grid.getBlockAtCoordinates(2, 3);
             let secondBlock = grid.getBlockAtCoordinates(7, 2);
             let thirdBlock  = grid.getBlockAtCoordinates(1, 2);
@@ -99,42 +107,13 @@ describe('Grid', function()
 
         });
 
-        it('throws an Error if two valid blocks are not passed', function()
-        {
-
-            let width       = 10;
-            let height      = 10;
-            let pathfinder  = new Pathfinder(width, height);
-            let grid        = pathfinder.grid;
-            let firstBlock  = grid.getBlockAtCoordinates(2, 3);
-            let secondBlock = grid.getBlockAtCoordinates(7, 2);
-
-            assert.throws(function()
-            {
-                grid.calculateDistanceBetweenBlocks();
-            }, Error);
-
-            assert.throws(function()
-            {
-                grid.calculateDistanceBetweenBlocks(firstBlock, null);
-            }, Error);
-
-            assert.throws(function()
-            {
-                grid.calculateDistanceBetweenBlocks(null, secondBlock);
-            }, Error);
-
-            assert.throws(function()
-            {
-                grid.calculateDistanceBetweenBlocks(123, 'abc');
-            }, Error);
-
-        });
 
     });
 
+
     describe('calculateDegreesBetweenBlocks()', function()
     {
+
 
         it('calculates the correct number of degrees in the arc between two blocks', function()
         {
@@ -142,7 +121,7 @@ describe('Grid', function()
             let width       = 10;
             let height      = 10;
             let pathfinder  = new Pathfinder(width, height);
-            let grid        = pathfinder.grid;
+            let grid        = pathfinder.getGrid();
             let centreBlock = grid.getBlockAtCoordinates(5, 5);
             let firstBlock  = grid.getBlockAtCoordinates(5, 1);
             let secondBlock = grid.getBlockAtCoordinates(1, 5);
@@ -154,42 +133,13 @@ describe('Grid', function()
 
         });
 
-        it('throws an Error if two valid blocks are not passed', function()
-        {
-
-            let width       = 10;
-            let height      = 10;
-            let pathfinder  = new Pathfinder(width, height);
-            let grid        = pathfinder.grid;
-            let firstBlock  = grid.getBlockAtCoordinates(2, 3);
-            let secondBlock = grid.getBlockAtCoordinates(7, 2);
-
-            assert.throws(function()
-            {
-                grid.calculateDegreesBetweenBlocks();
-            }, Error);
-
-            assert.throws(function()
-            {
-                grid.calculateDegreesBetweenBlocks(firstBlock, null);
-            }, Error);
-
-            assert.throws(function()
-            {
-                grid.calculateDegreesBetweenBlocks(null, secondBlock);
-            }, Error);
-
-            assert.throws(function()
-            {
-                grid.calculateDegreesBetweenBlocks(123, 'abc');
-            }, Error);
-
-        });
 
     });
 
+
     describe('getAdjacentBlocks()', function()
     {
+
 
         it('gets all adjacent blocks when all are available', function()
         {
@@ -199,7 +149,7 @@ describe('Grid', function()
             let x              = 5;
             let y              = 5;
             let pathfinder     = new Pathfinder(width, height);
-            let grid           = pathfinder.grid;
+            let grid           = pathfinder.getGrid();
             let block          = grid.getBlockAtCoordinates(x, y);
             let adjacentBlocks = grid.getAdjacentBlocks(block);
 
@@ -215,6 +165,7 @@ describe('Grid', function()
 
         });
 
+
         it('gets all available adjacent blocks when at edge', function()
         {
 
@@ -223,7 +174,7 @@ describe('Grid', function()
             let x              = 10;
             let y              = 9;
             let pathfinder     = new Pathfinder(width, height);
-            let grid           = pathfinder.grid;
+            let grid           = pathfinder.getGrid();
             let block          = grid.getBlockAtCoordinates(x, y);
             let adjacentBlocks = grid.getAdjacentBlocks(block);
 
@@ -236,6 +187,7 @@ describe('Grid', function()
 
         });
 
+
         it('gets all adjacent blocks except for diagonals', function()
         {
 
@@ -244,7 +196,7 @@ describe('Grid', function()
             let x              = 5;
             let y              = 5;
             let pathfinder     = new Pathfinder(width, height);
-            let grid           = pathfinder.grid;
+            let grid           = pathfinder.getGrid();
             let block          = grid.getBlockAtCoordinates(x, y);
             let adjacentBlocks = grid.getAdjacentBlocks(block, true, false);
 
@@ -256,6 +208,7 @@ describe('Grid', function()
 
         });
 
+
         it('gets all adjacent blocks, including blocked', function()
         {
 
@@ -265,7 +218,7 @@ describe('Grid', function()
             let x              = 5;
             let y              = 5;
             let pathfinder     = new Pathfinder(width, height, blocked);
-            let grid           = pathfinder.grid;
+            let grid           = pathfinder.getGrid();
             let block          = grid.getBlockAtCoordinates(x, y);
             let adjacentBlocks = grid.getAdjacentBlocks(block, true);
 
@@ -281,6 +234,7 @@ describe('Grid', function()
 
         });
 
+
         it('gets all adjacent blocks, excluding blocked', function()
         {
 
@@ -290,7 +244,7 @@ describe('Grid', function()
             let x              = 5;
             let y              = 5;
             let pathfinder     = new Pathfinder(width, height, blocked);
-            let grid           = pathfinder.grid;
+            let grid           = pathfinder.getGrid();
             let block          = grid.getBlockAtCoordinates(x, y);
             let adjacentBlocks = grid.getAdjacentBlocks(block, false);
 
@@ -303,36 +257,8 @@ describe('Grid', function()
 
         });
 
-        it('throws an Error if a valid block is not passed', function()
-        {
-
-            let width      = 10;
-            let height     = 10;
-            let pathfinder = new Pathfinder(width, height);
-            let grid       = pathfinder.grid;
-
-            assert.throws(function()
-            {
-                grid.getAdjacentBlocks();
-            }, Error);
-
-            assert.throws(function()
-            {
-                grid.getAdjacentBlocks(null);
-            }, Error);
-
-            assert.throws(function()
-            {
-                grid.getAdjacentBlocks(123);
-            }, Error);
-
-            assert.throws(function()
-            {
-                grid.getAdjacentBlocks('abc');
-            }, Error);
-
-        });
 
     });
+
 
 });

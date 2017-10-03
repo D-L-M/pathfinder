@@ -1,10 +1,13 @@
-import Grid from './Grid';
-import Block from './Block';
-import INavigationPathOptions from './Interfaces/INavigationPathOptions';
-import IBlockObject from './Interfaces/IBlockObject';
+import { Grid } from './Grid';
+import { Block } from './Block';
+import { INavigationPathOptions } from './Interface/INavigationPathOptions';
+import { IBlockObject } from './Interface/IBlockObject';
 
 
-export default class NavigationPath
+/**
+ * NavigationPath class
+ */
+export class NavigationPath
 {
 
 
@@ -13,7 +16,7 @@ export default class NavigationPath
      * @property {array} path
      */
     public path: Block[] = [];
-    
+
 
     /**
      * Array of Block objects that have been explored
@@ -24,33 +27,63 @@ export default class NavigationPath
 
     /**
      * Instantiate a NavigationPath object and plot the requested path
-     * @param {Block}  from    Start block object
-     * @param {Block}  to      Finish block object
-     * @param {Grid}   grid    Grid object
-     * @param {object} options Optional options object
-     * @throws {Error} if grid is not a Grid object
-     * @throws {Error} if from and to are not both Block objects
-     * @throws {Error} if it is not possible to plot a path
+     * @param {Grid}   _grid    Grid object
+     * @param {Block}  _from    Start block object
+     * @param {Block}  _to      Finish block object
+     * @param {object} _options Optional options object
      */
-    public constructor(private grid: Grid, private from: Block, private to: Block, private options: INavigationPathOptions)
+    public constructor(protected _grid: Grid, protected _from: Block, protected _to: Block, protected _options: INavigationPathOptions = {allowDiagonals: true})
     {
 
-        if (!(grid instanceof Grid))
-        {
-            throw new Error('Grid object not provided');
-        }
-
-        if (!(from instanceof Block) || !(to instanceof Block))
-        {
-            throw new Error('Two Block objects not provided');
-        }
-
-        if (typeof this.options.allowDiagonals === 'undefined')
-        {
-            this.options.allowDiagonals = true;
-        }
-
         this._calculatePath();
+
+    }
+
+
+    /**
+     * Get the grid which the path traverses
+     * @return {Grid} Grid object that the path traverses
+     */
+    public getGrid(): Grid
+    {
+
+        return this._grid;
+
+    }
+
+
+    /**
+     * Get the starting block
+     * @return {Block} Starting block
+     */
+    public getStartPoint(): Block
+    {
+
+        return this._from;
+
+    }
+
+
+    /**
+     * Get the end block
+     * @return {Block} End block
+     */
+    public getEndPoint(): Block
+    {
+
+        return this._to;
+
+    }
+
+
+    /**
+     * Get the path options
+     * @return {INavigationPathOptions} INavigationPathOptions object
+     */
+    public getOptions(): INavigationPathOptions
+    {
+
+        return this._options;
 
     }
 
@@ -62,7 +95,7 @@ export default class NavigationPath
      * @param  {array} ignoreBlocks Array of Block objects to ignore
      * @return {array}              Ordered array of Block objects
      */
-    private _reorderBlocks(blocks: Block[] = [], ignoreBlocks: Block[] = []): Block[]
+    protected _reorderBlocks(blocks: Block[] = [], ignoreBlocks: Block[] = []): Block[]
     {
 
         let result: Block[]        = [];
@@ -112,10 +145,12 @@ export default class NavigationPath
          */
         for (let k in ordered)
         {
+
             if (ordered.hasOwnProperty(k))
             {
                 result.push(ordered[k]);
             }
+
         }
 
         return result;
@@ -128,18 +163,12 @@ export default class NavigationPath
      * from the destination block
      * @param  {Block} block Block object to calculate key for
      * @return {int}         Numeric index key
-     * @throws {Error} if block is not a Block object
      */
-    private _deriveKeyFromDistance(block: Block): number
+    protected _deriveKeyFromDistance(block: Block): number
     {
 
-        if (!(block instanceof Block))
-        {
-            throw new Error('Block object not provided');
-        }
-
-        let distance: number = this.grid.calculateDistanceBetweenBlocks(block, this.to);
-        let degrees: number  = this.grid.calculateDegreesBetweenBlocks(block, this.to);
+        let distance: number = this._grid.calculateDistanceBetweenBlocks(block, this._to);
+        let degrees: number  = this._grid.calculateDegreesBetweenBlocks(block, this._to);
 
         return parseInt(Math.round(distance * 10).toString() + ('000' + Math.round(degrees).toString()).slice(-3));
 
@@ -150,14 +179,14 @@ export default class NavigationPath
      * Calculate the quickest path between the start and end points
      * @throws {Error} if it is not possible to plot a path
      */
-    private _calculatePath(): void
+    protected _calculatePath(): void
     {
 
         this.path     = [];
         this.explored = [];
 
-        let from: Block                   = this.from;
-        let to: Block                     = this.to;
+        let from: Block                   = this._from;
+        let to: Block                     = this._to;
         let pathHeads: Block[]            = [];
         let visitedBlocks: IBlockObject   = {};
         let pathHeadHistory: IBlockObject = {};
@@ -169,7 +198,7 @@ export default class NavigationPath
         {
             throw new Error('Cannot calculate path — end point is blocked');
         }
-        
+
         /*
          * Set up an initial path head (a head is the latest block used in a
          * given path) to be the starting block
@@ -211,7 +240,7 @@ export default class NavigationPath
                      * Get adjacent blocks to the head and loop through them
                      */
                     foundFreeBlock                  = true;
-                    let allowDiagonals: boolean     = this.options.allowDiagonals;
+                    let allowDiagonals: boolean     = this._options.allowDiagonals;
                     let visitedBlocksArray: Block[] = Object.keys(visitedBlocks).map(key => visitedBlocks[key]);
                     let adjacentBlocks: Block[]     = this._reorderBlocks(block.getAdjacentBlocks(false, allowDiagonals), visitedBlocksArray);
                     let headCoordinates: string     = block.getCoordinates();

@@ -1,12 +1,14 @@
-let assert     = require('assert');
-let Pathfinder = require('../dist/pathfinder.min.js');
+import { assert } from 'chai';
+import { Pathfinder } from '../dist/Pathfinder';
 
 
 describe('Pathfinder', function()
 {
 
+
     describe('constructor()', function()
     {
+
 
         it('returns a Pathfinder object, with a corresponding Grid object', function()
         {
@@ -17,13 +19,13 @@ describe('Pathfinder', function()
             let pathfinder = new Pathfinder(width, height, blocked);
 
             assert.equal('object', (typeof pathfinder));
-            assert.equal(width, pathfinder.grid.width);
-            assert.equal(height, pathfinder.grid.height);
+            assert.equal(width, pathfinder.getGrid().getWidth());
+            assert.equal(height, pathfinder.getGrid().getHeight());
 
             for (let i in blocked)
             {
 
-                let block     = pathfinder.getBlockAtCoordinates(blocked[i].split(',')[0], blocked[i].split(',')[1]);
+                let block     = pathfinder.getBlockAtCoordinates(parseInt(blocked[i].split(',')[0]), parseInt(blocked[i].split(',')[1]));
                 let isBlocked = block.isBlocked;
 
                 assert.equal(true, isBlocked);
@@ -31,6 +33,7 @@ describe('Pathfinder', function()
             }
 
         });
+
 
         it('can explicitly blacklist blocks', function ()
         {
@@ -48,6 +51,7 @@ describe('Pathfinder', function()
 
         });
 
+
         it('can explicitly whitelist blocks', function ()
         {
 
@@ -64,10 +68,13 @@ describe('Pathfinder', function()
 
         });
 
+
     });
+
 
     describe('getBlockAtCoordinates()', function()
     {
+
 
         it('can retrieve a specific block', function ()
         {
@@ -85,6 +92,7 @@ describe('Pathfinder', function()
 
         });
 
+
         it('throws an Error if an invalid block is requested', function ()
         {
 
@@ -99,10 +107,13 @@ describe('Pathfinder', function()
 
         });
 
+
     });
+
 
     describe('getNavigationPath()', function()
     {
+
 
         it('can successfully find a basic path', function ()
         {
@@ -118,6 +129,7 @@ describe('Pathfinder', function()
             assert.equal(18, path.explored.length);
 
         });
+
 
         it('throws an Error if a path cannot be mapped', function ()
         {
@@ -136,38 +148,8 @@ describe('Pathfinder', function()
 
         });
 
-        it('throws an Error if valid to and from blocks are not passed', function()
-        {
-
-            let width      = 10;
-            let height     = 1;
-            let blocked    = ['5,1'];
-            let pathfinder = new Pathfinder(width, height, blocked);
-            let from       = pathfinder.getBlockAtCoordinates(1, 1);
-            let to         = pathfinder.getBlockAtCoordinates(10, 1);
-
-            assert.throws(function()
-            {
-                pathfinder.getNavigationPath();
-            }, Error);
-
-            assert.throws(function()
-            {
-                pathfinder.getNavigationPath(from, null);
-            }, Error);
-
-            assert.throws(function()
-            {
-                pathfinder.getNavigationPath(null, to);
-            }, Error);
-
-            assert.throws(function()
-            {
-                pathfinder.getNavigationPath(123, 'abc');
-            }, Error);
-
-        });
 
     });
+
 
 });
