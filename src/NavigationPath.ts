@@ -145,10 +145,12 @@ export class NavigationPath
          */
         for (let k in ordered)
         {
+
             if (ordered.hasOwnProperty(k))
             {
                 result.push(ordered[k]);
             }
+
         }
 
         return result;

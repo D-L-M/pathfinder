@@ -61,10 +61,10 @@ export class Pathfinder
 
     /**
      * Get a nagivation path
-     * @param  {Block}          from     Start block object
-     * @param  {Block}          to       Finish block object
-     * @param  {object}         options  Optional options object
-     * @return {NavigationPath}          NavigationPath object
+     * @param  {Block}          from    Start block object
+     * @param  {Block}          to      Finish block object
+     * @param  {object}         options Optional options object
+     * @return {NavigationPath}         NavigationPath object
      */
     public getNavigationPath(from: Block, to: Block, options: INavigationPathOptions = {allowDiagonals: true}): NavigationPath
     {

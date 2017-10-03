@@ -51,7 +51,7 @@ export class Grid
             for (let y: number = 1; y <= _height; y++)
             {
                 let isBlocked: boolean = (blocked.indexOf(x + ',' + y) > -1);
-                this._blocks[x][y]      = new Block(this, x, y, (blockedListIsClearList ? !isBlocked : isBlocked));
+                this._blocks[x][y]     = new Block(this, x, y, (blockedListIsClearList ? !isBlocked : isBlocked));
             }
 
         }

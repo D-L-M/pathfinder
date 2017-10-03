@@ -1,6 +1,6 @@
 {
   "name": "simple-pathfinder",
-  "description": "A simple pathfinding algorithm",
+  "description": "A simple pathfinding library",
   "version": "1.0.1",
   "author": "David Maidment <david@dmaidment.co.uk>",
   "license": "GPL-3.0",
