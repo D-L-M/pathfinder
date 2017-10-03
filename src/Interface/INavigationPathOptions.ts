@@ -1,10 +1,7 @@
 /**
  * INavigationPathOptions interface, for options provided to NavigationPath
  */
-interface INavigationPathOptions
+export interface INavigationPathOptions
 {
     allowDiagonals: boolean;
 }
-
-
-export default INavigationPathOptions;

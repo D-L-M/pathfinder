@@ -1,18 +1,21 @@
-import Block from './Block';
-import Grid from './Grid';
-import NavigationPath from './NavigationPath';
-import INavigationPathOptions from './Interfaces/INavigationPathOptions';
+import { Block } from './Block';
+import { Grid } from './Grid';
+import { NavigationPath } from './NavigationPath';
+import { INavigationPathOptions } from './Interface/INavigationPathOptions';
 
 
-class Pathfinder
+/**
+ * Pathfinder class
+ */
+export class Pathfinder
 {
 
 
     /**
      * Grid object on which paths will be found
-     * @property {Grid} grid
+     * @property {Grid} _grid
      */
-    private grid: Grid;
+    protected _grid: Grid;
 
 
     /**
@@ -25,7 +28,19 @@ class Pathfinder
     public constructor(width: number = 10, height: number = 10, blocked: string[] = [], blockedListIsClearList: boolean = false)
     {
 
-        this.grid = new Grid(width, height, blocked, blockedListIsClearList);
+        this._grid = new Grid(width, height, blocked, blockedListIsClearList);
+
+    }
+
+
+    /**
+     * Get the grid
+     * @return {Grid} Grid object
+     */
+    public getGrid(): Grid
+    {
+
+        return this._grid;
 
     }
 
@@ -35,12 +50,11 @@ class Pathfinder
      * @param  {int}   x X coordinate
      * @param  {int}   y Y coordinate
      * @return {Block}   Block object
-     * @throws {Error} if a block does not exist at the given coordinates
      */
     public getBlockAtCoordinates(x: number = 1, y: number = 1): Block
     {
 
-        return this.grid.getBlockAtCoordinates(x, y);
+        return this._grid.getBlockAtCoordinates(x, y);
 
     }
 
@@ -51,23 +65,13 @@ class Pathfinder
      * @param  {Block}          to       Finish block object
      * @param  {object}         options  Optional options object
      * @return {NavigationPath}          NavigationPath object
-     * @throws {Error} if from and to are not both Block objects
-     * @throws {Error} if it is not possible to plot a path
      */
     public getNavigationPath(from: Block, to: Block, options: INavigationPathOptions = {allowDiagonals: true}): NavigationPath
     {
 
-        if (!(from instanceof Block) || !(to instanceof Block))
-        {
-            throw new Error('Two Block objects not provided');
-        }
-
-        return new NavigationPath(this.grid, from, to, options);
+        return new NavigationPath(this._grid, from, to, options);
 
     }
 
 
 }
-
-
-export = Pathfinder;

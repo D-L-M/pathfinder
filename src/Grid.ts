@@ -1,55 +1,96 @@
-import Block from './Block';
+import { Block } from './Block';
 
 
-export default class Grid
+/**
+ * Grid class
+ */
+export class Grid
 {
 
 
     /**
      * Multidimensionl array of Block objects
-     * @property {array} blocks
+     * @property {array} _blocks
      */
-    private blocks: Block[][];
+    protected _blocks: Block[][];
 
 
     /**
      * Instantiate a Grid object with a set width and height
-     * @param {int}     width                  Width of grid
-     * @param {int}     height                 Height of grid
+     * @param {int}     _width                 Width of grid
+     * @param {int}     _height                Height of grid
      * @param {array}   blocked                Array of blocked coordinates
      * @param {boolean} blockedListIsClearList Whether to turn blocked into a list of unblocked coordinates
      */
-    public constructor(private width: number = 10, private height: number = 10, blocked: string[] = [], blockedListIsClearList: boolean = false)
+    public constructor(protected _width: number = 10, protected _height: number = 10, blocked: string[] = [], blockedListIsClearList: boolean = false)
     {
 
-        this.blocks = [];
+        this._blocks = [];
 
         /*
          * Normalise the blocked list (remove spaces)
          */
         for (let i in blocked)
         {
+
             if (blocked.hasOwnProperty(i))
             {
                 blocked[i] = blocked[i].split(' ').join('');
             }
+
         }
 
         /*
          * Create all blocks within the grid
          */
-        for (let x: number = 1; x <= width; x++)
+        for (let x: number = 1; x <= _width; x++)
         {
 
-            this.blocks[x] = [];
+            this._blocks[x] = [];
 
-            for (let y: number = 1; y <= height; y++)
+            for (let y: number = 1; y <= _height; y++)
             {
                 let isBlocked: boolean = (blocked.indexOf(x + ',' + y) > -1);
-                this.blocks[x][y]      = new Block(this, x, y, (blockedListIsClearList ? !isBlocked : isBlocked));
+                this._blocks[x][y]      = new Block(this, x, y, (blockedListIsClearList ? !isBlocked : isBlocked));
             }
 
         }
+
+    }
+
+
+    /**
+     * Get the width of the grid
+     * @return {integer} Width of the grid
+     */
+    public getWidth(): number
+    {
+
+        return this._width;
+
+    }
+
+
+    /**
+     * Get the height of the grid
+     * @return {integer} Height of the grid
+     */
+    public getHeight(): number
+    {
+
+        return this._height;
+
+    }
+
+
+    /**
+     * Get the blocks that make up the grid
+     * @return {array} Multidimensionl array of Block objects
+     */
+    public getBlocks(): Block[][]
+    {
+
+        return this._blocks;
 
     }
 
@@ -64,7 +105,7 @@ export default class Grid
     public getBlockAtCoordinates(x: number = 1, y: number = 1): Block
     {
 
-        let blocks: Block[][] = this.blocks;
+        let blocks: Block[][] = this._blocks;
 
         if (typeof(blocks[x]) !== 'undefined' && typeof(blocks[x][y]) !== 'undefined')
         {
@@ -81,15 +122,9 @@ export default class Grid
      * @param  {Block} firstBlock  First block to check distance between
      * @param  {Block} secondBlock Second block to check distance between
      * @return {float}             Distance between blocks
-     * @throws {Error} if firstBlock and secondBlock are not both Block objects
      */
     public calculateDistanceBetweenBlocks(firstBlock: Block, secondBlock: Block): number
     {
-
-        if (!(firstBlock instanceof Block) || !(secondBlock instanceof Block))
-        {
-            throw new Error('Two Block objects not provided');
-        }
 
         let xDiff: number    = Math.abs(firstBlock.x - secondBlock.x);
         let yDiff: number    = Math.abs(firstBlock.y - secondBlock.y);
@@ -105,15 +140,9 @@ export default class Grid
      * @param  {Block} centreBlock   The centre block
      * @param  {Block} outlyingBlock The outlying block that forms the arc limit
      * @return {float}               Degrees between blocks
-     * @throws {Error} if centreBlock and outlyingBlock are not both Block objects
      */
     public calculateDegreesBetweenBlocks(centreBlock: Block, outlyingBlock: Block): number
     {
-
-        if (!(centreBlock instanceof Block) || !(outlyingBlock instanceof Block))
-        {
-            throw new Error('Two Block objects not provided');
-        }
 
         let xDiff: number   = (centreBlock.x - outlyingBlock.x);
         let yDiff: number   = (centreBlock.y - outlyingBlock.y);
@@ -135,18 +164,12 @@ export default class Grid
      * @param  {boolean} includeBlocked Whether to include blocks that have been marked as 'blocked'
      * @param  {boolean} allowDiagonals Whether to allow blocks that are diagonally adjacent
      * @return {array}                  Array of Block objects
-     * @throws {Error} if block is not a Block object
      */
     public getAdjacentBlocks(block: Block, includeBlocked: boolean = true, allowDiagonals: boolean = true): Block[]
     {
 
-        if (!(block instanceof Block))
-        {
-            throw new Error('Block object not provided');
-        }
-
         let nearby: Block[] = [];
-        
+
         /*
          * Traverse the rows
          */
@@ -162,7 +185,7 @@ export default class Grid
                 let targetX: number        = (block.x + x);
                 let targetY: number        = (block.y + y);
                 let isCentreBlock: boolean = (x == 0 && y == 0);
-                let isOnGrid: boolean      = (targetX > 0 && targetX <= this.width && targetY > 0 && targetY <= this.height);
+                let isOnGrid: boolean      = (targetX > 0 && targetX <= this._width && targetY > 0 && targetY <= this._height);
                 let isDiagonal: boolean    = ((x == -1 && y == -1) || (x == -1 && y == 1) || (x == 1 && y == 1) || (x == 1 && y == -1));
 
                 /*
@@ -172,7 +195,7 @@ export default class Grid
                 if (!isCentreBlock && isOnGrid && (!isDiagonal || allowDiagonals))
                 {
 
-                    let targetBlock: Block = this.blocks[targetX][targetY];
+                    let targetBlock: Block = this._blocks[targetX][targetY];
 
                     if (includeBlocked || !targetBlock.isBlocked)
                     {
@@ -180,7 +203,7 @@ export default class Grid
                     }
 
                 }
-                
+
             }
 
         }
